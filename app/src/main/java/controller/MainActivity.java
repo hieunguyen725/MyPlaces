@@ -1,18 +1,40 @@
 package controller;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.TabActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TabHost;
 
 import com.example.hieunguyen725.myplaces.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends TabActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+//        TabHost tabHost = getTabHost();
+//
+        TabHost.TabSpec tab1 = tabHost.newTabSpec("First Tab");
+        TabHost.TabSpec tab2 = tabHost.newTabSpec("Second Tab");
+        TabHost.TabSpec tab3 = tabHost.newTabSpec("Third Tab");
+
+        tab1.setIndicator("Nearby Search");
+        tab2.setIndicator("Related Search");
+        tab3.setIndicator("My Places");
+
+        tab1.setContent(new Intent(this, NearbySearchActivity.class));
+        tab2.setContent(new Intent(this, RelatedSearchActivity.class));
+        tab3.setContent(new Intent(this, MyPlacesActivity.class));
+
+        tabHost.addTab(tab1);
+        tabHost.addTab(tab2);
+        tabHost.addTab(tab3);
+
     }
 
     @Override

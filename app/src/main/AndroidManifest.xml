@@ -10,6 +10,11 @@
         <activity
             android:name="controller.MainActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="controller.LogInActivity"
@@ -18,11 +23,32 @@
         <activity
             android:name="controller.RegisterActivity"
             android:label="@string/title_activity_register" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+        <activity
+            android:name="controller.NearbySearchActivity"
+            android:label="@string/title_activity_nearby_search"
+            android:parentActivityName="controller.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="controller.MainActivity" />
+
+        </activity>
+        <activity
+            android:name="controller.RelatedSearchActivity"
+            android:label="@string/title_activity_related_search"
+            android:parentActivityName="controller.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="controller.MainActivity" />
+        </activity>
+        <activity
+            android:name="controller.MyPlacesActivity"
+            android:label="@string/title_activity_my_places"
+            android:parentActivityName="controller.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="controller.MainActivity" />
         </activity>
     </application>
 
