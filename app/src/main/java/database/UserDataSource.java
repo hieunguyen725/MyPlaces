@@ -55,8 +55,11 @@ public class UserDataSource {
         Log.i(TAG, "Returned " + cursor.getCount() + " rows");
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                User user = new User(cursor.getString(cursor.getColumnIndex(DBOpenHelper.UserTable.Columns.USERNAME)),
-                        cursor.getString(cursor.getColumnIndex(DBOpenHelper.UserTable.Columns.PASSWORD)));
+                User user = new User(
+                        cursor.getString(cursor.getColumnIndex(
+                                DBOpenHelper.UserTable.Columns.USERNAME)),
+                        cursor.getString(cursor.getColumnIndex(
+                                DBOpenHelper.UserTable.Columns.PASSWORD)));
                 users.add(user);
             }
         }

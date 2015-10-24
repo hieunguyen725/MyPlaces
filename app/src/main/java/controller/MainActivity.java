@@ -3,19 +3,23 @@ package controller;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 
 import com.example.hieunguyen725.myplaces.R;
 
-import database.UserDataSource;
+import java.util.List;
+
+import database.PlacesDataSource;
+import model.Place;
 
 public class MainActivity extends TabActivity {
 
     public static final String TAG = "MainActivity";
 
-    UserDataSource dataSource;
+    PlacesDataSource dataSource;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,32 +48,35 @@ public class MainActivity extends TabActivity {
     }
 
     public void testDB() {
-//        dataSource = new UserDataSource(this);
-//        createData();
+        dataSource = new PlacesDataSource(this);
+        createData();
     }
 
     private void createData() {
-//        User user = new User("Hieu", "password1");
-//        dataSource.create(user);
-//        user = new User("Trung", "password2");
-//        dataSource.create(user);
-//        user = new User("Nguyen", "password3");
-//        dataSource.create(user);
-//        List<User> users = dataSource.findAll();
-//        Log.i(TAG, users.toString());
+//        Place place = new Place("id = 3", "Test Location 3", "1234 44th ave s", "local address", -11.0, 11.0);
+//        place.setUsername("Hieu");
+//        dataSource.create(place);
+//        place = new Place("id = 4", "Test Location 4", "4321 99th ave s", "local address", -101.0, 1111.0);
+//        place.setUsername("Hieu");
+//        dataSource.create(place);
+//        place = new Place("id = 5", "Test Location 5", "4321 99th ave s", "local address", -101.0, 1111.0);
+//        place.setUsername("Nguyen");
+//        dataSource.create(place);
+        List<Place> places = dataSource.findUserPlaces("username = 'Hieu'");
+        Log.i(TAG, places.toString());
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        dataSource.open();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dataSource.open();
+    }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        dataSource.close();
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dataSource.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

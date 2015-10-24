@@ -13,7 +13,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBOpenHelper";
 
     private static final String DATABASE_NAME =  "myplaces.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final class UserTable {
         public static final String NAME = "user";
@@ -41,6 +41,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             public static final String MAIN_TYPE = "mainType";
             public static final String LAT = "latitude";
             public static final String LNG = "longitude";
+            public static final String DESCRIPTION = "description";
             public static final String PHONE_NUMBER = "phoneNumber";
             public static final String IMAGE = "image";
             public static final String WEB_URL = "webURL";
@@ -56,6 +57,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     PlacesTable.Columns.MAIN_TYPE + " TEXT, " +
                     PlacesTable.Columns.LAT + " REAL, " +
                     PlacesTable.Columns.LNG + " REAL, " +
+                    PlacesTable.Columns.DESCRIPTION + " TEXT, " +
                     PlacesTable.Columns.PHONE_NUMBER + " TEXT, " +
                     PlacesTable.Columns.IMAGE + " TEXT, " +
                     PlacesTable.Columns.WEB_URL + " TEXT " +
@@ -70,12 +72,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
-        Log.i(TAG, "Table has been created");
+        db.execSQL(CREATE_PLACES_TABLE);
+        Log.i(TAG, "Tables have been created");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + UserTable.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PlacesTable.NAME);
         onCreate(db);
     }
 }

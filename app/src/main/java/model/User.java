@@ -20,6 +20,10 @@ public class User {
         this(username, password, null);
     }
 
+    public User() {
+        this("", "", null);
+    }
+
     public List<Place> getPlacesList() {
         return placesList;
     }

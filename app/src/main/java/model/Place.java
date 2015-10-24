@@ -11,31 +11,39 @@ public class Place {
 
     // Required Fields
     private String placeID;
+    private String username;
     private String name;
     private String address;
     private String mainType;
-    private int lat;
-    private int lng;
+    private double lat;
+    private double lng;
 
 
     // Optional Fields
     private String phoneNumber;
     private String description;
+    private Bitmap placeImage;
+    private String imageURL;
+    private String websiteURL;
     private List<String> types;
     private List<String> reviews;
-    private Bitmap placeImage;
-    private String websiteURL;
 
-    public Place(String placeID, String name, String address, String mainType, int lat, int lng) {
+    public Place(String placeID, String name, String address, String mainType, double lat, double lng) {
         this.placeID = placeID;
         this.name = name;
         this.address = address;
         this.mainType = mainType;
         this.lat = lat;
         this.lng = lng;
+        this.phoneNumber = "Not available";
+        this.description = "Not available";
+        this.imageURL = "Not available";
+        this.websiteURL = "Not available";
     }
 
+    public Place() {
 
+    }
 
     public String getWebsiteURL() {
         return websiteURL;
@@ -51,6 +59,14 @@ public class Place {
 
     public void setPlaceID(String placeID) {
         this.placeID = placeID;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -77,19 +93,19 @@ public class Place {
         this.mainType = mainType;
     }
 
-    public int getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(int lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public int getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng(int lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 
@@ -132,5 +148,26 @@ public class Place {
 
     public void setPlaceImage(Bitmap placeImage) {
         this.placeImage = placeImage;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    @Override
+    public String toString() {
+        return "Place{" +
+                "placeID='" + placeID + '\'' +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", mainType='" + mainType + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                '}';
     }
 }
