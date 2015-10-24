@@ -40,7 +40,8 @@
         android:layout_below="@+id/login_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:onClick="loginOnClick" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -50,7 +51,8 @@
         android:id="@+id/login_create_account"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:onClick="createAccountOnClick" />
 
     <TextView
         android:layout_width="wrap_content"

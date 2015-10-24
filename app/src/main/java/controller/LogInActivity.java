@@ -1,13 +1,28 @@
 package controller;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.hieunguyen725.myplaces.R;
 
+import java.util.List;
+
+import database.UserDataSource;
+import model.User;
+
 public class LogInActivity extends AppCompatActivity {
+
+    private EditText username;
+    private EditText password;
+    private Button loginButton;
+    private Button createAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +50,43 @@ public class LogInActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Validate the user's username and password from the database once
+     * the login button is clicked.
+     * @param view
+     */
+    public void loginOnClick(View view) {
+        username = (EditText) findViewById(R.id.login_username);
+        password = (EditText) findViewById(R.id.login_password);
+        UserDataSource dataSource = new UserDataSource(this);
+        List<User> users = dataSource.findAll();
+        boolean validUser = false;
+        for (User user : users) {
+            if (user.getUsername().equals(username.getText().toString())
+                    && user.getPassword().equals(password.getText().toString())) {
+                validUser = true;
+
+            }
+        }
+        if (validUser) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("username", username.getText().toString());
+            Toast.makeText(this, "Logging in", Toast.LENGTH_LONG).show();
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Incorrect Username/Password", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void createAccountOnClick(View view) {
+        username = (EditText) findViewById(R.id.login_username);
+        password = (EditText) findViewById(R.id.login_password);
+        username.setText("");
+        password.setText("");
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 }

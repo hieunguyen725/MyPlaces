@@ -9,8 +9,13 @@ import android.widget.TabHost;
 
 import com.example.hieunguyen725.myplaces.R;
 
+import database.UserDataSource;
+
 public class MainActivity extends TabActivity {
 
+    public static final String TAG = "MainActivity";
+
+    UserDataSource dataSource;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +40,36 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(tab2);
         tabHost.addTab(tab3);
 
+        testDB();
     }
+
+    public void testDB() {
+//        dataSource = new UserDataSource(this);
+//        createData();
+    }
+
+    private void createData() {
+//        User user = new User("Hieu", "password1");
+//        dataSource.create(user);
+//        user = new User("Trung", "password2");
+//        dataSource.create(user);
+//        user = new User("Nguyen", "password3");
+//        dataSource.create(user);
+//        List<User> users = dataSource.findAll();
+//        Log.i(TAG, users.toString());
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        dataSource.open();
+//    }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        dataSource.close();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

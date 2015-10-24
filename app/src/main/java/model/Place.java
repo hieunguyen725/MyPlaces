@@ -17,21 +17,25 @@ public class Place {
     private int lat;
     private int lng;
 
+
     // Optional Fields
     private String phoneNumber;
+    private String description;
     private List<String> types;
     private List<String> reviews;
     private Bitmap placeImage;
     private String websiteURL;
 
-    public Place(int lng, int lat, String mainType, String address, String name, String placeID) {
-        this.lng = lng;
-        this.lat = lat;
-        this.mainType = mainType;
-        this.address = address;
-        this.name = name;
+    public Place(String placeID, String name, String address, String mainType, int lat, int lng) {
         this.placeID = placeID;
+        this.name = name;
+        this.address = address;
+        this.mainType = mainType;
+        this.lat = lat;
+        this.lng = lng;
     }
+
+
 
     public String getWebsiteURL() {
         return websiteURL;
@@ -95,6 +99,15 @@ public class Place {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<String> getTypes() {

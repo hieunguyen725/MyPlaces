@@ -9,4 +9,5 @@
     <string name="title_activity_nearby_search">NearbySearchActivity</string>
     <string name="title_activity_related_search">RelatedSearchActivity</string>
     <string name="title_activity_my_places">MyPlacesActivity</string>
+    <string name="title_activity_add_place">AddPlaceActivity</string>
 </resources>

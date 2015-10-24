@@ -26,4 +26,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:background="@android:color/white" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relatedSearch_viewlist"
+        android:layout_below="@+id/relatedSearch_search_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/white" />
 </RelativeLayout>

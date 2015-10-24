@@ -40,7 +40,8 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:background="@android:color/white"
-        android:hint="Password" />
+        android:hint="Password"
+        android:layout_marginTop="30dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -65,5 +66,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="47dp"
         android:hint="Create"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:onClick="createButtonOnClick" />
 </RelativeLayout>
