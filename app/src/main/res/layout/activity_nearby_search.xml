@@ -36,7 +36,8 @@
         android:layout_below="@+id/nearbySearch_radius"
         android:layout_centerHorizontal="true"
         android:background="@android:color/white"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:onClick="searchButtonOnClick" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -46,4 +47,28 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@android:color/white" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nearbySearch_progressBar"
+        android:layout_alignBottom="@+id/nearbySearch_listview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="109dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lat"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lng"
+        android:layout_alignBottom="@+id/lat"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
