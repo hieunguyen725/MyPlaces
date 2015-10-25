@@ -160,14 +160,6 @@ public class Place {
 
     @Override
     public String toString() {
-        return "Place{" +
-                "placeID='" + placeID + '\'' +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", mainType='" + mainType + '\'' +
-                ", lat=" + lat +
-                ", lng=" + lng +
-                '}';
+        return name + "\n" + address;
     }
 }

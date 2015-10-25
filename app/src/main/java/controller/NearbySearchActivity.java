@@ -17,14 +17,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hieunguyen725.myplaces.R;
 
 import java.io.IOException;
+import java.util.List;
+
+import model.Place;
+import parsers.JSONParser;
 
 public class NearbySearchActivity extends AppCompatActivity {
 
@@ -35,10 +42,11 @@ public class NearbySearchActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText keyword;
     private EditText radius;
+    private ListView listView;
 
     private Location myLocation;
-    double longitude;
-    double latitude;
+
+    private List<Place> currentPlaces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,17 +138,20 @@ public class NearbySearchActivity extends AppCompatActivity {
         if (isOnline()) {
             getLocation();
             if (myLocation != null) {
-                Toast.makeText(this, "Device location is enabled", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "Lat : " + myLocation.getLatitude());
-                TextView lat = (TextView) findViewById(R.id.lat);
-                TextView lng = (TextView) findViewById(R.id.lng);
-                lat.setText(myLocation.getLatitude() + "");
-                lng.setText(myLocation.getLongitude() + "");
-//                keyword = (EditText) findViewById(R.id.nearbySearch_keyword);
-//                radius = (EditText) findViewById(R.id.nearbySearch_radius);
-//                String URL = "";
-//                SearchTask task = new SearchTask();
-//                task.execute(URL);
+                keyword = (EditText) findViewById(R.id.nearbySearch_keyword);
+                radius = (EditText) findViewById(R.id.nearbySearch_radius);
+                if (keyword.getText().toString().equals("") || radius.getText().toString().equals("")) {
+                    Toast.makeText(this, "Invalid Keyword/Radius", Toast.LENGTH_LONG).show();
+                } else {
+                    String locationText = "&location=" + myLocation.getLatitude() + "," + myLocation.getLongitude();
+                    double metersPerMile = 1609.34;
+                    int myRadius = (int) (Double.parseDouble(radius.getText().toString()) * metersPerMile);
+                    String radiusText = "&radius=" + myRadius;
+                    String keywordText = "&keyword=" + keyword.getText().toString().replace(" ", "_");
+                    String URL = BASE_URL + locationText + radiusText + keywordText + API_KEY;
+                    SearchTask task = new SearchTask();
+                    task.execute(URL);
+                }
             } else {
                 Toast.makeText(this, "Device location is not enabled", Toast.LENGTH_LONG).show();
             }
@@ -183,9 +194,33 @@ public class NearbySearchActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.i(TAG, result);
+            if (result != null) {
+                JSONParser myParser = new JSONParser();
+                currentPlaces = myParser.nearbySearchParse(result);
+                if (currentPlaces != null) {
+                    Log.i(TAG, currentPlaces.toString());
+                    displayList();
+                } else {
+                    Log.i(TAG, "can't parse, myPlaces is null");
+                }
+            }
             progressBar.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void displayList() {
+        ListAdapter listAdapter = new ArrayAdapter<Place>(this, android.R.layout.simple_list_item_1,
+                currentPlaces);
+        ListView listView = (ListView) findViewById(R.id.nearbySearch_listview);
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Place place = (Place) parent.getItemAtPosition(position);
+                String placePicked = "You selected " + place.getName();
+                Toast.makeText(NearbySearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
