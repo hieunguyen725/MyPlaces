@@ -15,15 +15,15 @@ public class Place {
     private String name;
     private String address;
     private String mainType;
+    private Bitmap icon;
+    private String iconURL;
     private double lat;
     private double lng;
-
 
     // Optional Fields
     private String phoneNumber;
     private String description;
     private Bitmap placeImage;
-    private Bitmap icon;
     private String imageURL;
     private String websiteURL;
     private List<String> types;
@@ -165,6 +165,14 @@ public class Place {
 
     public void setIcon(Bitmap icon) {
         this.icon = icon;
+    }
+
+    public String getIconURL() {
+        return iconURL;
+    }
+
+    public void setIconURL(String iconURL) {
+        this.iconURL = iconURL;
     }
 
     @Override

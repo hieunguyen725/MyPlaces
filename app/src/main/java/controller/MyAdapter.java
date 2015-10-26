@@ -37,7 +37,8 @@ class MyAdapter extends ArrayAdapter<Place> {
 
         ImageView placeIcon = (ImageView) theView.findViewById(R.id.row_layout_2_image);
 
-//        placeIcon.setImageBitmap();
+        placeIcon.setImageBitmap(place.getIcon());
+
         return theView;
     }
 }

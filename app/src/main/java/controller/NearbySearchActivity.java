@@ -3,6 +3,8 @@ package controller;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,6 +28,8 @@ import android.widget.Toast;
 import com.example.hieunguyen725.myplaces.R;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import model.Place;
@@ -178,7 +182,22 @@ public class NearbySearchActivity extends AppCompatActivity {
             try {
                 content = connectionManager.getData(params[0]);
                 if (content != null) {
-                    return new JSONParser().nearbySearchParse(content);
+                    List<Place> places = new JSONParser().nearbySearchParse(content);
+                    if (places != null) {
+                        for (Place place : places) {
+                            try {
+                                String iconURL = place.getIconURL();
+                                InputStream inputStream = (InputStream)
+                                        new URL(iconURL).getContent();
+                                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                                place.setIcon(bitmap);
+                                inputStream.close();
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    }
+                    return places;
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -44,6 +44,8 @@ public class JSONParser {
                     double lng = location.getDouble("lng");
                     newPlace.setLat(lat);
                     newPlace.setLng(lng);
+                    String iconURL = result.getString("icon");
+                    newPlace.setIconURL(iconURL);
                     resultPlaces.add(newPlace);
                 }
                 return resultPlaces;
