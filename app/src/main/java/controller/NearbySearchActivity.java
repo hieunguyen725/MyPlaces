@@ -61,53 +61,49 @@ public class NearbySearchActivity extends AppCompatActivity {
     }
 
     private void getLocation() {
-        checkPermission();
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        final LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                myLocation = location;
+        if(checkPermission()) {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            final LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    myLocation = location;
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    Log.i(TAG, "location status changed");
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                    Log.i(TAG, "location provider enabled");
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+                    Log.i(TAG, "location provider disabled");
+                }
+            };
+            if (locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)
+                    && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, locationListener);
             }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-        if(locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)
-                && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, locationListener);
         }
     }
 
     /**
      * Required runtime permission check for android 6.0 or API 23 and higher
      */
-    private void checkPermission() {
-        int permissionCheckOne = ContextCompat.checkSelfPermission(this,
+    public boolean checkPermission() {
+        int gpsPermission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionCheckTwo = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permissionCheckOne == PackageManager.PERMISSION_GRANTED &&
-                permissionCheckTwo == PackageManager.PERMISSION_GRANTED) {
+        if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "permissions granted");
+            return true;
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    0);
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    1);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            return false;
         }
     }
 
@@ -172,7 +168,7 @@ public class NearbySearchActivity extends AppCompatActivity {
     }
 
 
-    private class SearchTask extends AsyncTask<String, String, String> {
+    private class SearchTask extends AsyncTask<String, String, List<Place>> {
 
         @Override
         protected void onPreExecute() {
@@ -181,30 +177,31 @@ public class NearbySearchActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... params) {
-            HttpManager httpManager = new HttpManager();
+        protected List<Place> doInBackground(String... params) {
+            ConnectionManager connectionManager = new ConnectionManager();
             String content = null;
             try {
-                content = httpManager.getData(params[0]);
+                content = connectionManager.getData(params[0]);
+                if (content != null) {
+                    return new JSONParser().nearbySearchParse(content);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return content;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            if (result != null) {
-                JSONParser myParser = new JSONParser();
-                currentPlaces = myParser.nearbySearchParse(result);
-                if (currentPlaces != null) {
-                    Log.i(TAG, currentPlaces.toString());
-                    displayList();
-                } else {
-                    Log.i(TAG, "can't parse, myPlaces is null");
-                }
+        protected void onPostExecute(List<Place> places) {
+            if (places != null) {
+                currentPlaces = places;
+                Log.i(TAG, places.toString());
+                displayList();
+            } else {
+                Log.i(TAG, "can't parse, places is null");
             }
             progressBar.setVisibility(View.INVISIBLE);
+            Log.i(TAG, "task finished");
         }
     }
 
@@ -222,6 +219,4 @@ public class NearbySearchActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

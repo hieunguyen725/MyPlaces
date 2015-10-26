@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * Created by Hieu on 10/24/2015.
  */
-public class HttpManager {
+public class ConnectionManager {
 
     public String getData(String uri) throws IOException {
         BufferedReader reader = null;

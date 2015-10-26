@@ -1,8 +1,12 @@
 package controller;
 
+import android.Manifest;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +28,10 @@ public class MainActivity extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        while (checkPermission()) {
+            checkPermission();
+        }
 
         TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
 //        TabHost tabHost = getTabHost();
@@ -64,6 +72,7 @@ public class MainActivity extends TabActivity {
 //        dataSource.create(place);
         List<Place> places = dataSource.findUserPlaces("username = 'Hieu'");
         Log.i(TAG, places.toString());
+
     }
 
     @Override
@@ -76,6 +85,22 @@ public class MainActivity extends TabActivity {
     protected void onPause() {
         super.onPause();
         dataSource.close();
+    }
+
+    /**
+     * Required runtime permission check for android 6.0 or API 23 and higher
+     */
+    public boolean checkPermission() {
+        int gpsPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "permissions granted");
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            return false;
+        }
     }
 
     @Override
