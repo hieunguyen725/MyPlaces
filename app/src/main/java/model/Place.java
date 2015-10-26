@@ -23,6 +23,7 @@ public class Place {
     private String phoneNumber;
     private String description;
     private Bitmap placeImage;
+    private Bitmap icon;
     private String imageURL;
     private String websiteURL;
     private List<String> types;
@@ -156,6 +157,14 @@ public class Place {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
     }
 
     @Override
