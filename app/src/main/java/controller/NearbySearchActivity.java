@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -201,9 +200,23 @@ public class NearbySearchActivity extends AppCompatActivity {
         }
     }
 
+//    public void displayList() {
+//        ListAdapter listAdapter = new ArrayAdapter<Place>(this, R.layout.row_layout_2,
+//                R.id.row_layout_placeName, currentPlaces);
+//        ListView listView = (ListView) findViewById(R.id.nearbySearch_listview);
+//        listView.setAdapter(listAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Place place = (Place) parent.getItemAtPosition(position);
+//                String placePicked = "You selected " + place.getName();
+//                Toast.makeText(NearbySearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
     public void displayList() {
-        ListAdapter listAdapter = new ArrayAdapter<Place>(this, android.R.layout.simple_list_item_1,
-                currentPlaces);
+        ListAdapter listAdapter = new MyAdapter(this, currentPlaces);
         ListView listView = (ListView) findViewById(R.id.nearbySearch_listview);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
