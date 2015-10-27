@@ -44,7 +44,6 @@ public class NearbySearchActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText keyword;
     private EditText radius;
-    private ListView listView;
 
     private Location myLocation;
 
@@ -94,7 +93,7 @@ public class NearbySearchActivity extends AppCompatActivity {
     /**
      * Required runtime permission check for android 6.0 or API 23 and higher
      */
-    public boolean checkPermission() {
+    private boolean checkPermission() {
         int gpsPermission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
@@ -182,20 +181,9 @@ public class NearbySearchActivity extends AppCompatActivity {
             try {
                 content = connectionManager.getData(params[0]);
                 if (content != null) {
-                    List<Place> places = new JSONParser().nearbySearchParse(content);
+                    List<Place> places = new JSONParser().searchParse(content, "nearby");
                     if (places != null) {
-                        for (Place place : places) {
-                            try {
-                                String iconURL = place.getIconURL();
-                                InputStream inputStream = (InputStream)
-                                        new URL(iconURL).getContent();
-                                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                                place.setIcon(bitmap);
-                                inputStream.close();
-                            } catch (Exception e) {
-
-                            }
-                        }
+                        places = getIcons(places);
                     }
                     return places;
                 }
@@ -203,6 +191,22 @@ public class NearbySearchActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        private List<Place> getIcons(List<Place> places) {
+            for (Place place : places) {
+                try {
+                    String iconURL = place.getIconURL();
+                    InputStream inputStream = (InputStream)
+                            new URL(iconURL).getContent();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    place.setIcon(bitmap);
+                    inputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return places;
         }
 
         @Override
@@ -219,22 +223,7 @@ public class NearbySearchActivity extends AppCompatActivity {
         }
     }
 
-//    public void displayList() {
-//        ListAdapter listAdapter = new ArrayAdapter<Place>(this, R.layout.row_layout_2,
-//                R.id.row_layout_placeName, currentPlaces);
-//        ListView listView = (ListView) findViewById(R.id.nearbySearch_listview);
-//        listView.setAdapter(listAdapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Place place = (Place) parent.getItemAtPosition(position);
-//                String placePicked = "You selected " + place.getName();
-//                Toast.makeText(NearbySearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-    public void displayList() {
+    private void displayList() {
         ListAdapter listAdapter = new MyAdapter(this, currentPlaces);
         ListView listView = (ListView) findViewById(R.id.nearbySearch_listview);
         listView.setAdapter(listAdapter);
@@ -242,7 +231,7 @@ public class NearbySearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Place place = (Place) parent.getItemAtPosition(position);
-                String placePicked = "You selected " + place.getName();
+                String placePicked = "You selected " + place.getMainType();
                 Toast.makeText(NearbySearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
             }
         });

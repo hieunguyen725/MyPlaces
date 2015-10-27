@@ -177,6 +177,6 @@ public class Place {
 
     @Override
     public String toString() {
-        return name + "\n" + address;
+        return name + "\n" + address + "\n" + mainType;
     }
 }

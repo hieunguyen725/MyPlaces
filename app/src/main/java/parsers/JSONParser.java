@@ -18,7 +18,7 @@ import model.Place;
 public class JSONParser {
 
 
-    public List<Place> nearbySearchParse(String myJSON) {
+    public List<Place> searchParse(String myJSON, String searchType) {
         List<Place> resultPlaces = new ArrayList<Place>();
         Log.i(NearbySearchActivity.TAG, "starting to parse");
         try {
@@ -29,23 +29,18 @@ public class JSONParser {
                 for (int i = 0; i < results.length(); i++) {
                     Place newPlace = new Place();
                     JSONObject result = results.getJSONObject(i);
-                    String placeID = result.getString("place_id");
-                    String placeName = result.getString("name");
-                    String placeAddress = result.getString("vicinity");
-                    newPlace.setPlaceID(placeID);
-                    if (!placeName.equals(null)) {
-                        newPlace.setName(placeName);
-                    } else {
-                        newPlace.setName("Local Address");
+                    newPlace.setPlaceID(result.getString("place_id"));
+                    newPlace.setName(result.getString("name"));
+                    if (searchType.equalsIgnoreCase("nearby")) {
+                       newPlace.setAddress(result.getString("vicinity"));
+                    } else if (searchType.equalsIgnoreCase("related")) {
+                        newPlace.setAddress(result.getString("formatted_address"));
                     }
-                    newPlace.setAddress(placeAddress);
                     JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
-                    double lat = location.getDouble("lat");
-                    double lng = location.getDouble("lng");
-                    newPlace.setLat(lat);
-                    newPlace.setLng(lng);
-                    String iconURL = result.getString("icon");
-                    newPlace.setIconURL(iconURL);
+                    newPlace.setLat(location.getDouble("lat"));
+                    newPlace.setLng(location.getDouble("lng"));
+                    newPlace.setIconURL(result.getString("icon"));
+                    newPlace.setMainType(result.getJSONArray("types").getString(0).replace("_", " "));
                     resultPlaces.add(newPlace);
                 }
                 return resultPlaces;

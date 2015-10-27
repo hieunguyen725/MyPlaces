@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="controller.NearbySearchActivity"
-    android:background="#accbff">
+    android:background="#f6e7d3">
 
     <EditText
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
         android:layout_below="@+id/nearbySearch_search_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:background="@android:color/white" />
+        android:background="#f6e7d3" />
 
     <ProgressBar
         android:layout_width="wrap_content"
