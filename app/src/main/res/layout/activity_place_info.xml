@@ -1,12 +1,144 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="controller.PlaceInfoActivity">
+    android:orientation="vertical"
+    tools:context="controller.PlaceInfoActivity"
+    android:background="#f6e7d3">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeInfo_back_button"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@mipmap/backbutton_icon"
+            android:background="#f6e7d3"
+            android:layout_marginBottom="30dp"
+            android:onClick="backButtonOnClick" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:text="Save"
+            android:id="@+id/placeInfo_save_button"
+            android:layout_alignBottom="@+id/placeInfo_back_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/white" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:text="Share"
+            android:id="@+id/placeInfo_share_button"
+            android:layout_alignBottom="@+id/placeInfo_back_button"
+            android:layout_toLeftOf="@+id/placeInfo_save_button"
+            android:layout_toStartOf="@+id/placeInfo_save_button"
+            android:background="@android:color/white"
+            android:layout_marginRight="20dp" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeInfo_progressBar"
+            android:layout_alignBottom="@+id/placeInfo_save_button"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="View Website"
+            android:id="@+id/placeInfo_viewweb"
+            android:onClick="viewWebOnClick"
+            android:background="@android:color/white"
+            android:layout_alignTop="@+id/placeInfo_share_button"
+            android:layout_toLeftOf="@+id/placeInfo_share_button"
+            android:layout_toStartOf="@+id/placeInfo_share_button"
+            android:layout_marginRight="20dp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name: "
+        android:id="@+id/placeInfo_name_tv"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeInfo_address_tv"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp"
+        android:text="Address: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place type: "
+        android:id="@+id/placeInfo_placeType_tv"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone: "
+        android:id="@+id/placeInfo_phone_tv"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeInfo_description_tv"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp" />
+
+        <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/placeInfo_place_image"
+        android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeInfo_opening_hours_tv"
+            android:layout_marginBottom="20dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeInfo_reviews_tv"
+            android:layout_marginBottom="20dp"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+
+</ScrollView>
+
+</LinearLayout>

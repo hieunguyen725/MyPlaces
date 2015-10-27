@@ -50,4 +50,57 @@ public class JSONParser {
         }
         return null;
     }
+
+    public Place infoParse(String myJSON) {
+        Place newPlace = new Place();
+        try {
+            // basic info
+            JSONObject jsonObject = new JSONObject(myJSON);
+            JSONObject resultInfo = jsonObject.getJSONObject("result");
+            newPlace.setPlaceID(resultInfo.getString("place_id"));
+            newPlace.setName(resultInfo.getString("name"));
+            newPlace.setAddress(resultInfo.getString("formatted_address"));
+            JSONObject location = resultInfo.getJSONObject("geometry").getJSONObject("location");
+            newPlace.setLat(location.getDouble("lat"));
+            newPlace.setLng(location.getDouble("lng"));
+            newPlace.setIconURL(resultInfo.getString("icon"));
+            newPlace.setMainType(resultInfo.getJSONArray("types").getString(0).replace("_", " "));
+            // extra info
+            if (resultInfo.has("photos")) {
+                JSONArray photos = resultInfo.getJSONArray("photos");
+                JSONObject photo = photos.getJSONObject(0);
+                newPlace.setImageReference(photo.getString("photo_reference"));
+            }
+            if (resultInfo.has("website")) {
+                String websiteURL = resultInfo.getString("website");
+                newPlace.setWebsiteURL(websiteURL);
+            }
+            if (resultInfo.has("opening_hours")) {
+                JSONObject openingHours = resultInfo.getJSONObject("opening_hours");
+                JSONArray weekdayText = openingHours.getJSONArray("weekday_text");
+                String weekdayHours = "";
+                for (int i = 0; i < weekdayText.length(); i++) {
+                    weekdayHours += weekdayText.getString(i) + "\n";
+                }
+                newPlace.setOpeningHours(weekdayHours);
+            }
+            if (resultInfo.has("reviews")) {
+                JSONArray reviews = resultInfo.getJSONArray("reviews");
+                String reviewsText = "";
+                for (int i = 0; i < reviews.length(); i++) {
+                    JSONObject review = reviews.getJSONObject(i);
+                    reviewsText += (i + 1) + ".   " + review.getString("text") + "\n\n";
+                }
+                newPlace.setReviews(reviewsText);
+            }
+            if (resultInfo.has("formatted_phone_number")) {
+                String phone = resultInfo.getString("formatted_phone_number");
+                newPlace.setPhoneNumber(phone);
+            }
+            return newPlace;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

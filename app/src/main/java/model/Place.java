@@ -2,8 +2,6 @@ package model;
 
 import android.graphics.Bitmap;
 
-import java.util.List;
-
 /**
  * Created by Hieu on 10/21/2015.
  */
@@ -15,19 +13,22 @@ public class Place {
     private String name;
     private String address;
     private String mainType;
-    private Bitmap icon;
     private String iconURL;
+    private String description;
     private double lat;
     private double lng;
 
+    // required but not in database
+    private Bitmap icon;
+
+
     // Optional Fields
     private String phoneNumber;
-    private String description;
     private Bitmap placeImage;
-    private String imageURL;
+    private String imageReference;
     private String websiteURL;
-    private List<String> types;
-    private List<String> reviews;
+    private String openingHours;
+    private String reviews;
 
     public Place(String placeID, String name, String address, String mainType, double lat, double lng) {
         this.placeID = placeID;
@@ -38,12 +39,15 @@ public class Place {
         this.lng = lng;
         this.phoneNumber = "Not available";
         this.description = "Not available";
-        this.imageURL = "Not available";
+        this.imageReference = "Not available";
         this.websiteURL = "Not available";
     }
 
     public Place() {
-
+        this.phoneNumber = "Not available";
+        this.description = "Not available";
+        this.imageReference = "Not available";
+        this.websiteURL = "Not available";
     }
 
     public String getWebsiteURL() {
@@ -127,19 +131,11 @@ public class Place {
         this.description = description;
     }
 
-    public List<String> getTypes() {
-        return types;
-    }
-
-    public void setTypes(List<String> types) {
-        this.types = types;
-    }
-
-    public List<String> getReviews() {
+    public String getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<String> reviews) {
+    public void setReviews(String reviews) {
         this.reviews = reviews;
     }
 
@@ -151,12 +147,12 @@ public class Place {
         this.placeImage = placeImage;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageReference() {
+        return imageReference;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageReference(String imageReference) {
+        this.imageReference = imageReference;
     }
 
     public Bitmap getIcon() {
@@ -175,8 +171,16 @@ public class Place {
         this.iconURL = iconURL;
     }
 
+    public String getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(String openingHours) {
+        this.openingHours = openingHours;
+    }
+
     @Override
     public String toString() {
-        return name + "\n" + address + "\n" + mainType;
+        return name + "\n" + address + "\n" + mainType + "\n" + websiteURL + "\n" + imageReference + "\n" + openingHours;
     }
 }

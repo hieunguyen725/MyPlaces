@@ -1,6 +1,7 @@
 package controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -167,6 +168,11 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 Place place = (Place) parent.getItemAtPosition(position);
                 String placePicked = "You selected " + place.getMainType();
                 Toast.makeText(RelatedSearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
+
+                // View page info activity
+                Intent intent = new Intent(RelatedSearchActivity.this, PlaceInfoActivity.class);
+                intent.putExtra("placeID", place.getPlaceID());
+                startActivity(intent);
             }
         });
     }

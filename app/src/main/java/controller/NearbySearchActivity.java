@@ -233,6 +233,8 @@ public class NearbySearchActivity extends AppCompatActivity {
                 Place place = (Place) parent.getItemAtPosition(position);
                 String placePicked = "You selected " + place.getMainType();
                 Toast.makeText(NearbySearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
+
+
             }
         });
     }

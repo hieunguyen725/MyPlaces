@@ -61,7 +61,7 @@ public class PlacesDataSource {
         values.put(DBOpenHelper.PlacesTable.Columns.LNG, place.getLng());
         values.put(DBOpenHelper.PlacesTable.Columns.DESCRIPTION, place.getDescription());
         values.put(DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER, place.getPhoneNumber());
-        values.put(DBOpenHelper.PlacesTable.Columns.IMAGE, place.getImageURL());
+        values.put(DBOpenHelper.PlacesTable.Columns.IMAGE, place.getImageReference());
         values.put(DBOpenHelper.PlacesTable.Columns.WEB_URL, place.getWebsiteURL());
         database.insert(DBOpenHelper.PlacesTable.NAME, null, values);
     }
@@ -83,7 +83,7 @@ public class PlacesDataSource {
                 place.setLng(cursor.getDouble(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.LNG)));
                 place.setDescription(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.DESCRIPTION)));
                 place.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER)));
-                place.setImageURL(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.IMAGE)));
+                place.setImageReference(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.IMAGE)));
                 place.setWebsiteURL(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.WEB_URL)));
                 places.add(place);
             }

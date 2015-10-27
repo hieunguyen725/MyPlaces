@@ -61,6 +61,7 @@
         <activity
             android:name="controller.PlaceInfoActivity"
             android:label="@string/title_activity_place_info" >
+
         </activity>
     </application>
 
