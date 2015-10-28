@@ -5,15 +5,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="controller.LogInActivity"
-    android:id="@+id/login_activity_view_file"
-    android:background="#f6e7d3">
+    android:id="@+id/login_activity_view_file">
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:id="@+id/login_username"
         android:layout_marginTop="149dp"
-        android:background="#ffffff"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -22,9 +20,8 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:id="@+id/login_password"
-        android:background="#ffffff"
         android:layout_below="@+id/login_username"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -34,14 +31,15 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:text="Log In"
         android:id="@+id/login_button"
         android:layout_below="@+id/login_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
-        android:background="#ffffff"
-        android:onClick="loginOnClick" />
+        android:background="#E91E63"
+        android:onClick="loginOnClick"
+        android:textColor="@android:color/white" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -51,8 +49,9 @@
         android:id="@+id/login_create_account"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-        android:onClick="createAccountOnClick" />
+        android:background="#E91E63"
+        android:onClick="createAccountOnClick"
+        android:textColor="@android:color/white" />
 
     <TextView
         android:layout_width="wrap_content"

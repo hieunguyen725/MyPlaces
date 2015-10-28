@@ -40,16 +40,23 @@ public class RelatedSearchActivity extends AppCompatActivity {
     private EditText searchPhrase;
     private ListView listview;
 
-    private List<Place> currentPlaces;
+    private static List<Place> currentPlaces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_related_search);
-        getSupportActionBar().hide();
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         progressBar = (ProgressBar) findViewById(R.id.relatedSearch_progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (currentPlaces != null) {
+            displayList();
+        }
     }
 
     @Override
@@ -61,17 +68,38 @@ public class RelatedSearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.nearby_search:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+                startActivity(intentNearby);
+                return true;
+
+            case R.id.related_search:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
+                startActivity(intentRelated);
+                return true;
+
+            case R.id.my_places:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
+                startActivity(intentPlaces);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void searchButtonOnClick(View view) {

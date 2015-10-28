@@ -1,16 +1,15 @@
 package controller;
 
 import android.Manifest;
-import android.app.TabActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TabHost;
 
 import com.example.hieunguyen725.myplaces.R;
 
@@ -19,7 +18,7 @@ import java.util.List;
 import database.PlacesDataSource;
 import model.Place;
 
-public class MainActivity extends TabActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
@@ -29,25 +28,28 @@ public class MainActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
+        Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+        startActivity(intentNearby);
 
-        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+
+//        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
 //        TabHost tabHost = getTabHost();
 //
-        TabHost.TabSpec tab1 = tabHost.newTabSpec("First Tab");
-        TabHost.TabSpec tab2 = tabHost.newTabSpec("Second Tab");
-        TabHost.TabSpec tab3 = tabHost.newTabSpec("Third Tab");
-
-        tab1.setIndicator("Nearby Search");
-        tab2.setIndicator("Related Search");
-        tab3.setIndicator("My Places");
-
-        tab1.setContent(new Intent(this, NearbySearchActivity.class));
-        tab2.setContent(new Intent(this, RelatedSearchActivity.class));
-        tab3.setContent(new Intent(this, MyPlacesActivity.class));
-
-        tabHost.addTab(tab1);
-        tabHost.addTab(tab2);
-        tabHost.addTab(tab3);
+//        TabHost.TabSpec tab1 = tabHost.newTabSpec("First Tab");
+//        TabHost.TabSpec tab2 = tabHost.newTabSpec("Second Tab");
+//        TabHost.TabSpec tab3 = tabHost.newTabSpec("Third Tab");
+//
+//        tab1.setIndicator("Nearby Search");
+//        tab2.setIndicator("Related Search");
+//        tab3.setIndicator("My Places");
+//
+//        tab1.setContent(new Intent(this, NearbySearchActivity.class));
+//        tab2.setContent(new Intent(this, RelatedSearchActivity.class));
+//        tab3.setContent(new Intent(this, MyPlacesActivity.class));
+//
+//        tabHost.addTab(tab1);
+//        tabHost.addTab(tab2);
+//        tabHost.addTab(tab3);
 
         testDB();
     }
@@ -109,16 +111,37 @@ public class MainActivity extends TabActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.nearby_search:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+                startActivity(intentNearby);
+                return true;
+
+            case R.id.related_search:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
+                startActivity(intentRelated);
+                return true;
+
+            case R.id.my_places:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
+                startActivity(intentPlaces);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
