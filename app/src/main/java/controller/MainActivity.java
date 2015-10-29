@@ -22,14 +22,20 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
+    protected static Intent currentIntent;
+
     PlacesDataSource dataSource;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
-        Intent intentNearby = new Intent(this, NearbySearchActivity.class);
-        startActivity(intentNearby);
+        if (currentIntent == null) {
+            Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+            startActivity(intentNearby);
+        } else {
+            startActivity(currentIntent);
+        }
 
 
 //        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -120,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+                MainActivity.currentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
@@ -127,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
+                MainActivity.currentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
@@ -134,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
+                MainActivity.currentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 

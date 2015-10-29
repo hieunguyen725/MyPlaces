@@ -36,6 +36,7 @@ public class MyPlacesActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+                MainActivity.currentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
@@ -43,6 +44,7 @@ public class MyPlacesActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
+                MainActivity.currentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
@@ -50,6 +52,7 @@ public class MyPlacesActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
+                MainActivity.currentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 

@@ -20,26 +20,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeInfo_back_button"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:src="@mipmap/backbutton_icon"
-            android:layout_marginBottom="30dp"
-            android:onClick="backButtonOnClick"
-            android:background="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp">
 
         <Button
             android:layout_width="70dp"
             android:layout_height="30dp"
             android:text="Save"
             android:id="@+id/placeInfo_save_button"
-            android:layout_alignBottom="@+id/placeInfo_back_button"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:background="#E91E63"
@@ -50,7 +38,6 @@
             android:layout_height="30dp"
             android:text="Share"
             android:id="@+id/placeInfo_share_button"
-            android:layout_alignBottom="@+id/placeInfo_back_button"
             android:layout_toLeftOf="@+id/placeInfo_save_button"
             android:layout_toStartOf="@+id/placeInfo_save_button"
             android:background="#E91E63"
@@ -84,7 +71,7 @@
         android:layout_height="wrap_content"
         android:text="Name: "
         android:id="@+id/placeInfo_name_tv"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:layout_marginBottom="20dp" />
 
     <TextView
@@ -92,7 +79,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/placeInfo_address_tv"
         android:layout_marginBottom="20dp"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:text="Address: " />
 
     <TextView
@@ -101,7 +88,7 @@
         android:text="Place type: "
         android:id="@+id/placeInfo_placeType_tv"
         android:layout_marginBottom="20dp"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -109,18 +96,18 @@
         android:text="Phone: "
         android:id="@+id/placeInfo_phone_tv"
         android:layout_marginBottom="20dp"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/placeInfo_description_tv"
         android:layout_marginBottom="20dp"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
         <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:id="@+id/placeInfo_place_image"
         android:layout_marginBottom="20dp" />
 
@@ -129,14 +116,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/placeInfo_opening_hours_tv"
             android:layout_marginBottom="20dp"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/placeInfo_reviews_tv"
             android:layout_marginBottom="20dp"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
 
     </LinearLayout>

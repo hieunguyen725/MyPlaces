@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -77,6 +78,7 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+                MainActivity.currentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
@@ -84,6 +86,7 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
+                MainActivity.currentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
@@ -91,6 +94,7 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
+                MainActivity.currentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 
@@ -103,6 +107,11 @@ public class RelatedSearchActivity extends AppCompatActivity {
     }
 
     public void searchButtonOnClick(View view) {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
         if (isOnline()) {
             searchPhrase = (EditText) findViewById(R.id.relatedSearch_searchPhrase);
             if (searchPhrase.getText().toString().equals("")) {

@@ -61,8 +61,12 @@
         </activity>
         <activity
             android:name="controller.PlaceInfoActivity"
-            android:label="@string/title_activity_place_info" >
+            android:label="@string/title_activity_place_info"
+            android:parentActivityName="controller.MainActivity" >
 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="controller.MainActivity" />
         </activity>
     </application>
 

@@ -42,7 +42,8 @@ public class PlaceInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_info);
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         progressBar = (ProgressBar) findViewById(R.id.placeInfo_progressBar);
         progressBar.setVisibility(View.INVISIBLE);
