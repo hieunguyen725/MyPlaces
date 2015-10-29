@@ -58,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
                 confirmPassword.getText().toString().equals("") ||
                 username.getText().toString().equals("")) {
             Toast.makeText(this, "Please fill in all inputs", Toast.LENGTH_LONG).show();
+        } else if (username.getText().toString().length() < 5 || password.getText().toString().length() < 5) {
+            Toast.makeText(this, "Username/Password must be at least 5 characters", Toast.LENGTH_LONG).show();
         } else if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
             Toast.makeText(this, "Password/Confirm Password do not match", Toast.LENGTH_LONG).show();
         } else {

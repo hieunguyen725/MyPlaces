@@ -2,12 +2,14 @@ package model;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
+
 /**
  * Created by Hieu on 10/21/2015.
  */
 public class Place {
 
-    // Required Fields
+    // Required Fields in database
     private String placeID;
     private String username;
     private String name;
@@ -15,38 +17,37 @@ public class Place {
     private String mainType;
     private String iconURL;
     private String description;
-    private double lat;
-    private double lng;
+    private String phoneNumber;
+    private String contentResource;
 
     // required but not in database
     private Bitmap icon;
-
+    private double lat;
+    private double lng;
 
     // Optional Fields
-    private String phoneNumber;
-    private Bitmap placeImage;
-    private String imageReference;
+    private List<Bitmap> placeImages;
+    private List<String> imageReferences;
     private String websiteURL;
     private String openingHours;
     private String reviews;
 
-    public Place(String placeID, String name, String address, String mainType, double lat, double lng) {
+    public Place(String placeID, String username, String name, String address, String mainType,
+                 String iconURL, String description, String phoneNumber) {
         this.placeID = placeID;
+        this.username = username;
         this.name = name;
         this.address = address;
         this.mainType = mainType;
-        this.lat = lat;
-        this.lng = lng;
-        this.phoneNumber = "Not available";
-        this.description = "Not available";
-        this.imageReference = "Not available";
+        this.iconURL = iconURL;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
         this.websiteURL = "Not available";
     }
 
     public Place() {
         this.phoneNumber = "Not available";
         this.description = "Not available";
-        this.imageReference = "Not available";
         this.websiteURL = "Not available";
     }
 
@@ -139,20 +140,20 @@ public class Place {
         this.reviews = reviews;
     }
 
-    public Bitmap getPlaceImage() {
-        return placeImage;
+    public List<Bitmap> getPlaceImages() {
+        return placeImages;
     }
 
-    public void setPlaceImage(Bitmap placeImage) {
-        this.placeImage = placeImage;
+    public void setPlaceImages(List<Bitmap> placeImages) {
+        this.placeImages = placeImages;
     }
 
-    public String getImageReference() {
-        return imageReference;
+    public List<String> getImageReferences() {
+        return imageReferences;
     }
 
-    public void setImageReference(String imageReference) {
-        this.imageReference = imageReference;
+    public void setImageReferences(List<String> imageReferences) {
+        this.imageReferences = imageReferences;
     }
 
     public Bitmap getIcon() {
@@ -179,8 +180,17 @@ public class Place {
         this.openingHours = openingHours;
     }
 
+    public String getContentResource() {
+        return contentResource;
+    }
+
+    public void setContentResource(String contentResource) {
+        this.contentResource = contentResource;
+    }
+
     @Override
     public String toString() {
-        return name + "\n" + address + "\n" + mainType + "\n" + websiteURL + "\n" + imageReference + "\n" + openingHours;
+        return name + "\n" + address + "\n" + mainType + "\n" + websiteURL;
     }
+
 }

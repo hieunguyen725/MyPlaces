@@ -203,12 +203,11 @@ public class RelatedSearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Place place = (Place) parent.getItemAtPosition(position);
-                String placePicked = "You selected " + place.getMainType();
-                Toast.makeText(RelatedSearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
 
                 // View page info activity
                 Intent intent = new Intent(RelatedSearchActivity.this, PlaceInfoActivity.class);
                 intent.putExtra("placeID", place.getPlaceID());
+                intent.putExtra("placeSource", place.getContentResource());
                 startActivity(intent);
             }
         });

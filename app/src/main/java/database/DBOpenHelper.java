@@ -13,7 +13,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBOpenHelper";
 
     private static final String DATABASE_NAME =  "myplaces.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 7;
 
     public static final class UserTable {
         public static final String NAME = "user";
@@ -39,28 +39,27 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
             public static final String MAIN_TYPE = "mainType";
-            public static final String LAT = "latitude";
-            public static final String LNG = "longitude";
             public static final String DESCRIPTION = "description";
             public static final String PHONE_NUMBER = "phoneNumber";
-            public static final String IMAGE = "image";
-            public static final String WEB_URL = "webURL";
+            public static final String ICON_URL = "iconURL";
+            public static final String CONTENT_RESOURCE = "contentResource";
         }
     }
 
     private static final String CREATE_PLACES_TABLE =
             "CREATE TABLE " + PlacesTable.NAME + " (" +
-                    PlacesTable.Columns.PLACE_ID + " TEXT PRIMARY KEY, " +
+                    PlacesTable.Columns.PLACE_ID + " TEXT, " +
                     PlacesTable.Columns.USERNAME + " TEXT, " +
                     PlacesTable.Columns.NAME + " TEXT, " +
                     PlacesTable.Columns.ADDRESS + " TEXT, " +
                     PlacesTable.Columns.MAIN_TYPE + " TEXT, " +
-                    PlacesTable.Columns.LAT + " REAL, " +
-                    PlacesTable.Columns.LNG + " REAL, " +
                     PlacesTable.Columns.DESCRIPTION + " TEXT, " +
                     PlacesTable.Columns.PHONE_NUMBER + " TEXT, " +
-                    PlacesTable.Columns.IMAGE + " TEXT, " +
-                    PlacesTable.Columns.WEB_URL + " TEXT " +
+                    PlacesTable.Columns.ICON_URL + " TEXT, " +
+                    PlacesTable.Columns.CONTENT_RESOURCE + " TEXT, \n" +
+                    "PRIMARY KEY (" +
+                    PlacesTable.Columns.PLACE_ID + ", " +
+                    PlacesTable.Columns.USERNAME + ")" +
                     ")";
 
 

@@ -61,5 +61,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:textColor="#455A64" />
 </RelativeLayout>

@@ -9,125 +9,134 @@
     android:orientation="vertical"
     tools:context="controller.PlaceInfoActivity">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="30dp"
-            android:text="Save"
-            android:id="@+id/placeInfo_save_button"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:background="#E91E63"
-            android:textColor="@android:color/white" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="35dp">
 
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="30dp"
-            android:text="Share"
-            android:id="@+id/placeInfo_share_button"
-            android:layout_toLeftOf="@+id/placeInfo_save_button"
-            android:layout_toStartOf="@+id/placeInfo_save_button"
-            android:background="#E91E63"
-            android:layout_marginRight="20dp"
-            android:textColor="@android:color/white" />
+                <Button
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:text="Save"
+                    android:id="@+id/placeInfo_save_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="#E91E63"
+                    android:textColor="@android:color/white"
+                    android:onClick="saveButtonOnClick" />
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeInfo_progressBar"
-            android:layout_alignBottom="@+id/placeInfo_save_button"
-            android:layout_centerHorizontal="true" />
+                <Button
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:text="Share"
+                    android:id="@+id/placeInfo_share_button"
+                    android:layout_toLeftOf="@+id/placeInfo_save_button"
+                    android:layout_toStartOf="@+id/placeInfo_save_button"
+                    android:background="#E91E63"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@android:color/white" />
 
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:text="View Website"
-            android:id="@+id/placeInfo_viewweb"
-            android:onClick="viewWebOnClick"
-            android:background="#E91E63"
-            android:layout_alignTop="@+id/placeInfo_share_button"
-            android:layout_toLeftOf="@+id/placeInfo_share_button"
-            android:layout_toStartOf="@+id/placeInfo_share_button"
-            android:layout_marginRight="20dp"
-            android:textColor="@android:color/white" />
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:text="View Website"
+                    android:id="@+id/placeInfo_viewweb"
+                    android:onClick="viewWebOnClick"
+                    android:background="#E91E63"
+                    android:layout_alignTop="@+id/placeInfo_share_button"
+                    android:layout_toLeftOf="@+id/placeInfo_share_button"
+                    android:layout_toStartOf="@+id/placeInfo_share_button"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@android:color/white" />
 
-    </RelativeLayout>
+            </RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Name: "
-        android:id="@+id/placeInfo_name_tv"
-        android:textSize="15sp"
-        android:layout_marginBottom="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name: "
+                android:id="@+id/placeInfo_name_tv"
+                android:textSize="15sp"
+                android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/placeInfo_address_tv"
-        android:layout_marginBottom="20dp"
-        android:textSize="15sp"
-        android:text="Address: " />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeInfo_address_tv"
+                android:layout_marginBottom="20dp"
+                android:textSize="15sp"
+                android:text="Address: " />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Place type: "
-        android:id="@+id/placeInfo_placeType_tv"
-        android:layout_marginBottom="20dp"
-        android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Place type: "
+                android:id="@+id/placeInfo_placeType_tv"
+                android:layout_marginBottom="20dp"
+                android:textSize="15sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone: "
-        android:id="@+id/placeInfo_phone_tv"
-        android:layout_marginBottom="20dp"
-        android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone: "
+                android:id="@+id/placeInfo_phone_tv"
+                android:layout_marginBottom="20dp"
+                android:textSize="15sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/placeInfo_description_tv"
-        android:layout_marginBottom="20dp"
-        android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeInfo_description_tv"
+                android:textSize="15sp" />
 
-        <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/placeInfo_place_image"
-        android:layout_marginBottom="20dp" />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeInfo_progressBar"
+                android:layout_alignBottom="@+id/placeInfo_save_button"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeInfo_opening_hours_tv"
-            android:layout_marginBottom="20dp"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeInfo_reviews_tv"
-            android:layout_marginBottom="20dp"
-            android:textSize="14sp" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:id="@+id/placeInfo_images_list">
 
 
-    </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
 
-</ScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeInfo_opening_hours_tv"
+                android:layout_marginBottom="20dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeInfo_reviews_tv"
+                android:layout_marginBottom="20dp"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

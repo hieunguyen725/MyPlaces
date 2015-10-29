@@ -41,6 +41,7 @@ public class JSONParser {
                     newPlace.setLng(location.getDouble("lng"));
                     newPlace.setIconURL(result.getString("icon"));
                     newPlace.setMainType(result.getJSONArray("types").getString(0).replace("_", " "));
+                    newPlace.setContentResource("onlineContent");
                     resultPlaces.add(newPlace);
                 }
                 return resultPlaces;
@@ -67,9 +68,12 @@ public class JSONParser {
             newPlace.setMainType(resultInfo.getJSONArray("types").getString(0).replace("_", " "));
             // extra info
             if (resultInfo.has("photos")) {
+                newPlace.setImageReferences(new ArrayList<String>());
                 JSONArray photos = resultInfo.getJSONArray("photos");
-                JSONObject photo = photos.getJSONObject(0);
-                newPlace.setImageReference(photo.getString("photo_reference"));
+                for (int i = 0; i < photos.length(); i++) {
+                    JSONObject photo = photos.getJSONObject(i);
+                    newPlace.getImageReferences().add(photo.getString("photo_reference"));
+                }
             }
             if (resultInfo.has("website")) {
                 String websiteURL = resultInfo.getString("website");
@@ -97,6 +101,7 @@ public class JSONParser {
                 String phone = resultInfo.getString("formatted_phone_number");
                 newPlace.setPhoneNumber(phone);
             }
+            newPlace.setContentResource("onlineContent");
             return newPlace;
         } catch (JSONException e) {
             e.printStackTrace();

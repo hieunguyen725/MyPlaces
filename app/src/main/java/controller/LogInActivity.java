@@ -18,6 +18,7 @@ import database.UserDataSource;
 import model.User;
 
 public class LogInActivity extends AppCompatActivity {
+    protected static String user;
 
     private EditText username;
     private EditText password;
@@ -71,6 +72,7 @@ public class LogInActivity extends AppCompatActivity {
             }
         }
         if (validUser) {
+            user = username.getText().toString();
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("username", username.getText().toString());
             Toast.makeText(this, "Logging in", Toast.LENGTH_LONG).show();

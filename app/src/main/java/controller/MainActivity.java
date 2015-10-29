@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
+//    protected static String user;
     protected static Intent currentIntent;
 
     PlacesDataSource dataSource;

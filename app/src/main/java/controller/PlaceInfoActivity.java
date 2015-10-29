@@ -1,5 +1,6 @@
 package controller;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +26,9 @@ import com.example.hieunguyen725.myplaces.R;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
+import database.PlacesDataSource;
 import model.Place;
 import parsers.JSONParser;
 
@@ -42,8 +46,7 @@ public class PlaceInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_info);
-//        getSupportActionBar().hide();
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         progressBar = (ProgressBar) findViewById(R.id.placeInfo_progressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -52,14 +55,26 @@ public class PlaceInfoActivity extends AppCompatActivity {
     }
 
     private void retrieveInfo() {
-        if (isOnline()) {
-            String placeID = "placeid=" + getIntent().getStringExtra("placeID");
-            String URL = BASE_URL + placeID + API_KEY;
-            Log.i(TAG, "URL = " + URL);
-            SearchTask task = new SearchTask();
-            task.execute(URL);
+        String contentSource = getIntent().getStringExtra("placeSource");
+        if (contentSource.equals("onlineContent")) {
+            if (isOnline()) {
+                String placeID = "placeid=" + getIntent().getStringExtra("placeID");
+                String URL = BASE_URL + placeID + API_KEY;
+                Log.i(TAG, "URL = " + URL);
+                SearchTask task = new SearchTask();
+                task.execute(URL);
+            } else {
+                Toast.makeText(this, "Network connection is not available", Toast.LENGTH_LONG).show();
+            }
         } else {
-            Toast.makeText(this, "Network connection is not available", Toast.LENGTH_LONG).show();
+            Bundle extras = getIntent().getExtras();
+            currentPlace = new Place();
+            currentPlace.setName(extras.getString("placeName"));
+            currentPlace.setAddress(extras.getString("placeAddress"));
+            currentPlace.setMainType(extras.getString("placeType"));
+            currentPlace.setPhoneNumber(extras.getString("placePhone"));
+            currentPlace.setDescription(extras.getString("placeDescription"));
+            displayInfo();
         }
     }
 
@@ -83,20 +98,42 @@ public class PlaceInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.nearby_search:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+                MainActivity.currentIntent = intentNearby;
+                startActivity(intentNearby);
+                return true;
+
+            case R.id.related_search:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
+                MainActivity.currentIntent = intentRelated;
+                startActivity(intentRelated);
+                return true;
+
+            case R.id.my_places:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
+                MainActivity.currentIntent = intentPlaces;
+                startActivity(intentPlaces);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
-
-
 
     private class SearchTask extends AsyncTask<String, String, Place> {
 
@@ -116,8 +153,9 @@ public class PlaceInfoActivity extends AppCompatActivity {
                     Log.i(TAG, "content is not null");
                     Log.i(TAG, "content length: " + content.length());
                     Place place = new JSONParser().infoParse(content);
-                    if (place != null && !place.getImageReference().equals(null)) {
-                        place = loadImage(place);
+                    if (place != null && place.getImageReferences() != null) {
+                        Log.i(TAG, place.getImageReferences().toString());
+                        place = loadImages(place);
                     }
                     return place;
                 }
@@ -127,28 +165,33 @@ public class PlaceInfoActivity extends AppCompatActivity {
             return null;
         }
 
-        private Place loadImage(Place place) {
+        private Place loadImages(Place place) {
             try {
-                String imageURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400"
-                        + "&photoreference=" + place.getImageReference() + API_KEY;
-                InputStream inputStream = (InputStream)
-                        new URL(imageURL).getContent();
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                place.setPlaceImage(bitmap);
-                inputStream.close();
+                place.setPlaceImages(new ArrayList<Bitmap>());
+                for (String reference : place.getImageReferences()) {
+                    String imageURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400"
+                            + "&photoreference=" + reference + API_KEY;
+                    Log.i(TAG, imageURL);
+                    InputStream inputStream = (InputStream)
+                            new URL(imageURL).getContent();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    Log.i(TAG, "Bitmap height = " + bitmap.getHeight());
+                    place.getPlaceImages().add(bitmap);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return place;
         }
 
+
         @Override
         protected void onPostExecute(Place place) {
             if (place != null) {
                 // set username for place here
                 Log.i(TAG, place.toString());
-                displayInfo(place);
                 currentPlace = place;
+                displayInfo();
             } else {
                 Log.i(TAG, "can't parse, place is null");
             }
@@ -157,32 +200,48 @@ public class PlaceInfoActivity extends AppCompatActivity {
         }
     }
 
-    private void displayInfo(Place place) {
+    private void displayInfo() {
         TextView placeName = (TextView) findViewById(R.id.placeInfo_name_tv);
         TextView placeAddress = (TextView) findViewById(R.id.placeInfo_address_tv);
         TextView placeType = (TextView) findViewById(R.id.placeInfo_placeType_tv);
         TextView placePhone = (TextView) findViewById(R.id.placeInfo_phone_tv);
         TextView placeDescription = (TextView) findViewById(R.id.placeInfo_description_tv);
-        ImageView placeImage = (ImageView) findViewById(R.id.placeInfo_place_image);
         TextView openingHours = (TextView) findViewById(R.id.placeInfo_opening_hours_tv);
         TextView reviews = (TextView) findViewById(R.id.placeInfo_reviews_tv);
 
-        placeName.setText("Name: " + place.getName());
-        placeAddress.setText("Address: " + place.getAddress());
-        placeType.setText("Place type: " + place.getMainType());
-        placePhone.setText("Phone: " + place.getPhoneNumber());
-        if (place.getImageReference() != null) {
-            placeImage.setImageBitmap(place.getPlaceImage());
+        placeName.setText("Name: " + currentPlace.getName());
+        placeAddress.setText("Address: " + currentPlace.getAddress());
+        placeType.setText("Place type: " + currentPlace.getMainType());
+        placePhone.setText("Phone: " + currentPlace.getPhoneNumber());
+        if (currentPlace.getPlaceImages() != null) {
+            int height = getAverageSize(currentPlace);
+            Log.i(TAG, currentPlace.getPlaceImages().size() + "");
+            LinearLayout imagesHolder = (LinearLayout) findViewById(R.id.placeInfo_images_list);
+            for (Bitmap image : currentPlace.getPlaceImages()) {
+
+                ImageView imageView = new ImageView(this);
+                imageView.setImageBitmap(image);
+                imageView.setLayoutParams(new ActionBar.LayoutParams(height + 250, height));
+                imagesHolder.addView(imageView);
+            }
         }
-        if (!place.getDescription().equals("Not available")) {
-            placeDescription.setText("Description: " + place.getDescription());
+        if (!currentPlace.getDescription().equals("Not available")) {
+            placeDescription.setText("Description: " + currentPlace.getDescription());
         }
-        if (place.getOpeningHours() != null) {
-            openingHours.setText("Opening hours: \n\n" + place.getOpeningHours());
+        if (currentPlace.getOpeningHours() != null) {
+            openingHours.setText("Opening hours: \n\n" + currentPlace.getOpeningHours());
         }
-        if (place.getReviews() != null) {
-            reviews.setText("Reviews: \n\n" + place.getReviews());
+        if (currentPlace.getReviews() != null) {
+            reviews.setText("Reviews: \n\n" + currentPlace.getReviews());
         }
+    }
+
+    private int getAverageSize(Place place) {
+        int totalHeight = 0;
+        for (Bitmap image : place.getPlaceImages()) {
+            totalHeight += image.getHeight();
+        }
+        return (int) totalHeight / place.getPlaceImages().size();
     }
 
     public void viewWebOnClick(View view) {
@@ -195,9 +254,13 @@ public class PlaceInfoActivity extends AppCompatActivity {
         }
     }
 
-    public void backButtonOnClick(View view) {
-        finish();
+    public void saveButtonOnClick(View view) {
+        currentPlace.setUsername(LogInActivity.user);
+        PlacesDataSource placesDataSource = new PlacesDataSource(this);
+        placesDataSource.create(currentPlace);
+        Toast.makeText(this, "Place Saved", Toast.LENGTH_LONG).show();
     }
+
 
 
 

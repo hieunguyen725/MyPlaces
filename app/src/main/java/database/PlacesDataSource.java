@@ -27,12 +27,10 @@ public class PlacesDataSource {
             DBOpenHelper.PlacesTable.Columns.NAME,
             DBOpenHelper.PlacesTable.Columns.ADDRESS,
             DBOpenHelper.PlacesTable.Columns.MAIN_TYPE,
-            DBOpenHelper.PlacesTable.Columns.LAT,
-            DBOpenHelper.PlacesTable.Columns.LNG,
             DBOpenHelper.PlacesTable.Columns.DESCRIPTION,
             DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER,
-            DBOpenHelper.PlacesTable.Columns.IMAGE,
-            DBOpenHelper.PlacesTable.Columns.WEB_URL
+            DBOpenHelper.PlacesTable.Columns.ICON_URL,
+            DBOpenHelper.PlacesTable.Columns.CONTENT_RESOURCE
     };
 
     public PlacesDataSource(Context context) {
@@ -57,12 +55,10 @@ public class PlacesDataSource {
         values.put(DBOpenHelper.PlacesTable.Columns.NAME, place.getName());
         values.put(DBOpenHelper.PlacesTable.Columns.ADDRESS, place.getAddress());
         values.put(DBOpenHelper.PlacesTable.Columns.MAIN_TYPE, place.getMainType());
-        values.put(DBOpenHelper.PlacesTable.Columns.LAT, place.getLat());
-        values.put(DBOpenHelper.PlacesTable.Columns.LNG, place.getLng());
         values.put(DBOpenHelper.PlacesTable.Columns.DESCRIPTION, place.getDescription());
         values.put(DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER, place.getPhoneNumber());
-        values.put(DBOpenHelper.PlacesTable.Columns.IMAGE, place.getImageReference());
-        values.put(DBOpenHelper.PlacesTable.Columns.WEB_URL, place.getWebsiteURL());
+        values.put(DBOpenHelper.PlacesTable.Columns.ICON_URL, place.getIconURL());
+        values.put(DBOpenHelper.PlacesTable.Columns.CONTENT_RESOURCE, place.getContentResource());
         database.insert(DBOpenHelper.PlacesTable.NAME, null, values);
     }
 
@@ -79,12 +75,10 @@ public class PlacesDataSource {
                 place.setName(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.NAME)));
                 place.setAddress(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.ADDRESS)));
                 place.setMainType(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.MAIN_TYPE)));
-                place.setLat(cursor.getDouble(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.LAT)));
-                place.setLng(cursor.getDouble(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.LNG)));
                 place.setDescription(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.DESCRIPTION)));
                 place.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER)));
-                place.setImageReference(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.IMAGE)));
-                place.setWebsiteURL(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.WEB_URL)));
+                place.setIconURL(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.ICON_URL)));
+                place.setContentResource(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.CONTENT_RESOURCE)));
                 places.add(place);
             }
         }

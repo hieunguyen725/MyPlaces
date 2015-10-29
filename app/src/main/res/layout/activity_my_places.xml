@@ -11,16 +11,25 @@
         android:layout_height="30dp"
         android:text="Add Place"
         android:id="@+id/myPlaces_add_place_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:background="#E91E63"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp"
+        android:onClick="addPlaceOnClick" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/myPlaces_progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/myPlaces_listview"
-        android:layout_above="@+id/myPlaces_add_place_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp" />
+        android:id="@+id/myPlaces_listView"
+        android:layout_below="@+id/myPlaces_add_place_button"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

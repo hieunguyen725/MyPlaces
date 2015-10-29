@@ -271,12 +271,11 @@ public class NearbySearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Place place = (Place) parent.getItemAtPosition(position);
-                String placePicked = "You selected " + place.getMainType();
-                Toast.makeText(NearbySearchActivity.this, placePicked, Toast.LENGTH_SHORT).show();
 
                 // View page info activity
                 Intent intent = new Intent(NearbySearchActivity.this, PlaceInfoActivity.class);
                 intent.putExtra("placeID", place.getPlaceID());
+                intent.putExtra("placeSource", place.getContentResource());
                 startActivity(intent);
             }
         });
