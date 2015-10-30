@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.hieunguyen725.myplaces.R;
 
@@ -51,7 +52,9 @@ public class MyPlacesActivity extends AppCompatActivity {
 
     private void loadPlaceData() {
         currentPlaces = placesDataSource.findUserPlaces("username = " + "'" + LogInActivity.user + "'");
-        if (currentPlaces.size() > 0) {
+        if (!isOnline()) {
+            Toast.makeText(this, "No network connection", Toast.LENGTH_LONG).show();
+        } else if (currentPlaces.size() > 0) {
             GetIcons task = new GetIcons();
             task.execute(currentPlaces);
         }
@@ -134,7 +137,8 @@ public class MyPlacesActivity extends AppCompatActivity {
             List<Place> places = params[0];
             if (places != null && places.size() > 0) {
                 Log.i(TAG, "Places size = " + places.size());
-                return getIcons(places);
+//                return getIcons(places);
+                return places;
             } else {
                 Log.i(TAG, "Place is null");
             }

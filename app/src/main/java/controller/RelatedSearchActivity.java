@@ -154,9 +154,6 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 content = connectionManager.getData(params[0]);
                 if (content != null) {
                     List<Place> places = new JSONParser().searchParse(content, "related");
-                    if (places != null) {
-                        places = getIcons(places);
-                    }
                     return places;
                 }
             } catch (IOException e) {

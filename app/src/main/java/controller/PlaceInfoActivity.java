@@ -69,6 +69,8 @@ public class PlaceInfoActivity extends AppCompatActivity {
         } else {
             Bundle extras = getIntent().getExtras();
             currentPlace = new Place();
+            currentPlace.setUsername(LogInActivity.user);
+            currentPlace.setPlaceID(extras.getString("placeID"));
             currentPlace.setName(extras.getString("placeName"));
             currentPlace.setAddress(extras.getString("placeAddress"));
             currentPlace.setMainType(extras.getString("placeType"));

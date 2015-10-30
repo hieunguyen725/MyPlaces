@@ -222,9 +222,6 @@ public class NearbySearchActivity extends AppCompatActivity {
                 content = connectionManager.getData(params[0]);
                 if (content != null) {
                     List<Place> places = new JSONParser().searchParse(content, "nearby");
-                    if (places != null) {
-                        places = getIcons(places);
-                    }
                     return places;
                 }
             } catch (IOException e) {
