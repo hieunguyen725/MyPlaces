@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -56,7 +57,7 @@ public class NearbySearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_search);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        checkPermission();
         progressBar = (ProgressBar) findViewById(R.id.nearbySearch_progressBar);
         progressBar.setVisibility(View.INVISIBLE);
         Log.i(TAG, "Nearby onCreate called");
@@ -98,6 +99,7 @@ public class NearbySearchActivity extends AppCompatActivity {
                     && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, locationListener);
             }
+            myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
     }
 
@@ -111,7 +113,9 @@ public class NearbySearchActivity extends AppCompatActivity {
             Log.i(TAG, "permissions granted");
             return true;
         } else {
-            Toast.makeText(this, "Device location access permission was denied", Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+//            Toast.makeText(this, "Device location access permission was denied", Toast.LENGTH_LONG).show();
             return false;
         }
     }

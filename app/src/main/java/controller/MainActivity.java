@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkPermission();
+//        checkPermission();
         if (currentIntent == null) {
             Intent intentNearby = new Intent(this, NearbySearchActivity.class);
             startActivity(intentNearby);
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 //        tabHost.addTab(tab2);
 //        tabHost.addTab(tab3);
 
-        testDB();
+//        testDB();
     }
 
     public void testDB() {
@@ -81,18 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        dataSource.open();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        dataSource.close();
-    }
-
     /**
      * Required runtime permission check for android 6.0 or API 23 and higher
      */
@@ -103,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "permissions granted");
             return true;
         } else {
+            Log.i(TAG, "permission not granted");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
             return false;
