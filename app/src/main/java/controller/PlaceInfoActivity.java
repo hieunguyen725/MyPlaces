@@ -28,32 +28,56 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-import database.PlacesDataSource;
+import model.database.PlacesDataSource;
 import model.Place;
-import parsers.JSONParser;
+import model.parsers.JSONParser;
+import model.service.MyConnection;
 
+/**
+ * This is an activity that will allow the user the view
+ * a place's information such as its name, address, location type,
+ * phone number, description and more.
+ */
 public class PlaceInfoActivity extends AppCompatActivity {
 
     public static final String TAG = "PlaceInfoActivity";
-    private static final String API_KEY = "&key=AIzaSyCYoO7HjswFyU9zNWR7kP_kJoWs_IlQIuI";
-    private static final String BASE_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
+    private static final String API_KEY = "&key=AIzaSyCYoO7HjswFyU9zNWR" +
+            "7kP_kJoWs_IlQIuI";
+    private static final String BASE_URL = "https://maps.googleapis.com" +
+            "/maps/api/place/details/json?";
+    private static final String BASE_IMAGE_URL = "https://maps.googleapis.com" +
+            "/maps/api/place/photo?maxwidth=400&photoreference=";
 
-    private ProgressBar progressBar;
+    private ProgressBar mProgressBar;
+    private Place mCurrentPlace;
 
-    private Place currentPlace;
-
+    /**
+     * On Create method to initialize and inflate the activity's
+     * user interface. Also to retrieve the information of the current
+     * place to display.
+     * @param savedInstanceState Bundle containing the data most recently
+     *                           saved data through onSaveInstanceState,
+     *                           null if nothing was saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_info);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        progressBar = (ProgressBar) findViewById(R.id.placeInfo_progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        mProgressBar = (ProgressBar) findViewById(R.id.placeInfo_progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         retrieveInfo();
     }
 
+    /**
+     * Retrieve the information of the current place to display.
+     * If the place's content source is from an online web service, then make
+     * a http web service request and display the information.
+     *  Otherwise retrieve the place's information
+     * from getIntent() and display the information.
+     */
     private void retrieveInfo() {
         String contentSource = getIntent().getStringExtra("placeSource");
         if (contentSource.equals("onlineContent")) {
@@ -64,22 +88,28 @@ public class PlaceInfoActivity extends AppCompatActivity {
                 SearchTask task = new SearchTask();
                 task.execute(URL);
             } else {
-                Toast.makeText(this, "Network connection is not available", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Network connection is not available",
+                        Toast.LENGTH_LONG).show();
             }
         } else {
             Bundle extras = getIntent().getExtras();
-            currentPlace = new Place();
-            currentPlace.setUsername(LogInActivity.user);
-            currentPlace.setPlaceID(extras.getString("placeID"));
-            currentPlace.setName(extras.getString("placeName"));
-            currentPlace.setAddress(extras.getString("placeAddress"));
-            currentPlace.setMainType(extras.getString("placeType"));
-            currentPlace.setPhoneNumber(extras.getString("placePhone"));
-            currentPlace.setDescription(extras.getString("placeDescription"));
+            mCurrentPlace = new Place();
+            mCurrentPlace.setUsername(LogInActivity.sUser);
+            mCurrentPlace.setPlaceID(extras.getString("placeID"));
+            mCurrentPlace.setName(extras.getString("placeName"));
+            mCurrentPlace.setAddress(extras.getString("placeAddress"));
+            mCurrentPlace.setMainType(extras.getString("placeType"));
+            mCurrentPlace.setPhoneNumber(extras.getString("placePhone"));
+            mCurrentPlace.setDescription(extras.getString("placeDescription"));
             displayInfo();
         }
     }
 
+    /**
+     * Check whether the device is connected to a network.
+     * @return true network is available and is connected/connecting,
+     * false otherwise.
+     */
     private boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -91,6 +121,11 @@ public class PlaceInfoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialize the option menu content for this activity
+     * @param menu The option menu object to be inflated with the menu layout
+     * @return true to display the menu, false to not display the menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -98,6 +133,11 @@ public class PlaceInfoActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle selected menu option by the user
+     * @param item The selected menu item by the user
+     * @return true if menu item process was taken, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -106,55 +146,70 @@ public class PlaceInfoActivity extends AppCompatActivity {
                 return true;
 
             case R.id.nearby_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the nearby search activity, start the nearby
+                // search activity
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
-                MainActivity.currentIntent = intentNearby;
+                MainActivity.sCurrentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
             case R.id.related_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the related search activity, start the related
+                // search activity
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
-                MainActivity.currentIntent = intentRelated;
+                MainActivity.sCurrentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
             case R.id.my_places:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose my places search activity, start my places activity
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
-                MainActivity.currentIntent = intentPlaces;
+                MainActivity.sCurrentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
+                // If we got here, the sUser's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
+    /**
+     * This is a class that represents a search task and extends AsyncTask.
+     * This class will search for, retrieve and parse a place's information
+     * by making http web service request to the Google Places.
+     */
     private class SearchTask extends AsyncTask<String, String, Place> {
 
+        /**
+         * Prepare to execute task.
+         */
         @Override
         protected void onPreExecute() {
             Log.i(TAG, "Starting task");
-            progressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * Use a connection to make a web service request, retrieve the JSON
+         * content to parse and load the place's images if there are any.
+         * @param params a String of URL to request the place's information.
+         * @return A place that containing its information from the web service.
+         *  null if no matching information content.
+         */
         @Override
         protected Place doInBackground(String... params) {
-            ConnectionManager connectionManager = new ConnectionManager();
+            MyConnection myConnection = new MyConnection();
             String content = null;
             try {
-                content = connectionManager.getData(params[0]);
+                content = myConnection.getData(params[0]);
                 if (content != null) {
                     Log.i(TAG, "content is not null");
                     Log.i(TAG, "content length: " + content.length());
                     Place place = new JSONParser().infoParse(content);
+                    // If the place is available and have images references
+                    // then load the place's images.
                     if (place != null && place.getImageReferences() != null) {
                         Log.i(TAG, place.getImageReferences().toString());
                         place = loadImages(place);
@@ -167,13 +222,20 @@ public class PlaceInfoActivity extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Load the images content and add the images to the place's images list.
+         * @param place the current place to display information and add images to.
+         * @return a place with images added.
+         */
         private Place loadImages(Place place) {
             try {
                 place.setPlaceImages(new ArrayList<Bitmap>());
                 for (String reference : place.getImageReferences()) {
-                    String imageURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400"
-                            + "&photoreference=" + reference + API_KEY;
+                    String imageURL = BASE_IMAGE_URL + reference + API_KEY;
                     Log.i(TAG, imageURL);
+                    // Retrieve imageURL content and store it into the inputStream
+                    // for decoding to generate the bitmap object. Then add the result
+                    // to the place's images list.
                     InputStream inputStream = (InputStream)
                             new URL(imageURL).getContent();
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -187,21 +249,28 @@ public class PlaceInfoActivity extends AppCompatActivity {
         }
 
 
+        /**
+         * Given a place with its information, display the
+         * place information if not null.
+         * @param place a place containing its information.
+         */
         @Override
         protected void onPostExecute(Place place) {
             if (place != null) {
-                // set username for place here
                 Log.i(TAG, place.toString());
-                currentPlace = place;
+                mCurrentPlace = place;
                 displayInfo();
             } else {
                 Log.i(TAG, "can't parse, place is null");
             }
-            progressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
             Log.i(TAG, "task finished");
         }
     }
 
+    /**
+     * Display the place information to the user interface.
+     */
     private void displayInfo() {
         TextView placeName = (TextView) findViewById(R.id.placeInfo_name_tv);
         TextView placeAddress = (TextView) findViewById(R.id.placeInfo_address_tv);
@@ -211,33 +280,42 @@ public class PlaceInfoActivity extends AppCompatActivity {
         TextView openingHours = (TextView) findViewById(R.id.placeInfo_opening_hours_tv);
         TextView reviews = (TextView) findViewById(R.id.placeInfo_reviews_tv);
 
-        placeName.setText("Name: " + currentPlace.getName());
-        placeAddress.setText("Address: " + currentPlace.getAddress());
-        placeType.setText("Place type: " + currentPlace.getMainType());
-        placePhone.setText("Phone: " + currentPlace.getPhoneNumber());
-        if (currentPlace.getPlaceImages() != null) {
-            int height = getAverageSize(currentPlace);
-            Log.i(TAG, currentPlace.getPlaceImages().size() + "");
-            LinearLayout imagesHolder = (LinearLayout) findViewById(R.id.placeInfo_images_list);
-            for (Bitmap image : currentPlace.getPlaceImages()) {
+        // Display the place's basic information.
+        placeName.setText("Name: " + mCurrentPlace.getName());
+        placeAddress.setText("Address: " + mCurrentPlace.getAddress());
+        placeType.setText("Place type: " + mCurrentPlace.getMainType());
+        placePhone.setText("Phone: " + mCurrentPlace.getPhoneNumber());
 
+        // Calculate the average height of the place's images if they are not
+        // not null then add image to the layout.
+        if (mCurrentPlace.getPlaceImages() != null) {
+            int height = getAverageSize(mCurrentPlace);
+            Log.i(TAG, mCurrentPlace.getPlaceImages().size() + "");
+            LinearLayout imagesHolder = (LinearLayout) findViewById(R.id.placeInfo_images_list);
+            for (Bitmap image : mCurrentPlace.getPlaceImages()) {
                 ImageView imageView = new ImageView(this);
                 imageView.setImageBitmap(image);
                 imageView.setLayoutParams(new ActionBar.LayoutParams(height + 250, height));
                 imagesHolder.addView(imageView);
             }
         }
-        if (!currentPlace.getDescription().equals("Not available")) {
-            placeDescription.setText("Description: " + currentPlace.getDescription());
+        if (!mCurrentPlace.getDescription().equals("Not available")) {
+            placeDescription.setText("Description: " + mCurrentPlace.getDescription());
         }
-        if (currentPlace.getOpeningHours() != null) {
-            openingHours.setText("Opening hours: \n\n" + currentPlace.getOpeningHours());
+        if (mCurrentPlace.getOpeningHours() != null) {
+            openingHours.setText("Opening hours: \n\n" + mCurrentPlace.getOpeningHours());
         }
-        if (currentPlace.getReviews() != null) {
-            reviews.setText("Reviews: \n\n" + currentPlace.getReviews());
+        if (mCurrentPlace.getReviews() != null) {
+            reviews.setText("Reviews: \n\n" + mCurrentPlace.getReviews());
         }
     }
 
+    /**
+     * Calculate the place's images height to get the average
+     * size of the images for a better display.
+     * @param place a place containing the images to calculate
+     * @return the average height of the images as an integer.
+     */
     private int getAverageSize(Place place) {
         int totalHeight = 0;
         for (Bitmap image : place.getPlaceImages()) {
@@ -246,22 +324,44 @@ public class PlaceInfoActivity extends AppCompatActivity {
         return (int) totalHeight / place.getPlaceImages().size();
     }
 
+    /**
+     * Web on click button listener, launch the place's website
+     * in a fully functional website mode if the place has a
+     * website.
+     * @param view reference of the widget that was clicked on.
+     */
     public void viewWebOnClick(View view) {
-        if (!currentPlace.getWebsiteURL().equals("Not available")) {
-            Uri URL = Uri.parse(currentPlace.getWebsiteURL());
-            Intent intent = new Intent(Intent.ACTION_VIEW, URL);
+        if (!mCurrentPlace.getWebsiteURL().equals("Not available")) {
+            // parse the website URL then launch it as an intent
+            // to view a fully functional website.
+            Uri URI = Uri.parse(mCurrentPlace.getWebsiteURL());
+            Intent intent = new Intent(Intent.ACTION_VIEW, URI);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Place has no website", Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * Save button on click listener, create a place a data source
+     * to connect to the SQLite database and save the current place.
+     * @param view reference to the widget that was clicked on.
+     */
     public void saveButtonOnClick(View view) {
-        currentPlace.setUsername(LogInActivity.user);
+        mCurrentPlace.setUsername(LogInActivity.sUser);
         PlacesDataSource placesDataSource = new PlacesDataSource(this);
-        placesDataSource.create(currentPlace);
+        placesDataSource.create(mCurrentPlace);
         Toast.makeText(this, "Place Saved", Toast.LENGTH_LONG).show();
     }
+
+    /**
+     * Share button on click listener, on yet implemented.
+     * @param view  reference to the widget that was clicked on.
+     */
+    public void shareButtonOnClick(View view) {
+        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_LONG).show();
+    }
+
 
 
 

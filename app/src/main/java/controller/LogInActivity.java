@@ -1,12 +1,13 @@
 package controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,23 +15,41 @@ import com.example.hieunguyen725.myplaces.R;
 
 import java.util.List;
 
-import database.UserDataSource;
 import model.User;
+import model.database.UserDataSource;
 
+/**
+ * Author: Hieu Nguyen
+ *
+ * This is an activity that will allow the user to log into the
+ * application. If the user does not have an account, the activity
+ * allow them to move onto another activity to register.
+ */
 public class LogInActivity extends AppCompatActivity {
-    protected static String user;
 
-    private EditText username;
-    private EditText password;
-    private Button loginButton;
-    private Button createAccountButton;
+    protected static String sUser;
 
+    private EditText mUserName;
+    private EditText mPassword;
+
+    /**
+     * On Create method to initialize and inflate the activity's
+     * user interface
+     * @param savedInstanceState Bundle containing the data most recently
+     *                           saved data through onSaveInstanceState,
+     *                           null if nothing was saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
     }
 
+    /**
+     * Initialize the option menu content for this activity
+     * @param menu The option menu object to be inflated with the menu layout
+     * @return true to display the menu, false to not display the menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -38,6 +57,11 @@ public class LogInActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle selected menu option by the user
+     * @param item The selected menu item by the user
+     * @return true if menu item process was taken, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -54,27 +78,37 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     /**
-     * Validate the user's username and password from the database once
-     * the login button is clicked.
-     * @param view
+     * Log in button listener, validate the user's username and password
+     * from the database once the login button is clicked. If it is a
+     * valid user, allow them to log in and move to the next activity.
+     * @param view reference of the widget that was clicked
      */
     public void loginOnClick(View view) {
-        username = (EditText) findViewById(R.id.login_username);
-        password = (EditText) findViewById(R.id.login_password);
+        // Once the button is clicked, hide the soft keyboard
+        // from the screen.
+        InputMethodManager inputMethodManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        // Hide the keyboard from the screen unless it is forced to
+        // open up as required for edit text for input.
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        mUserName = (EditText) findViewById(R.id.login_username);
+        mPassword = (EditText) findViewById(R.id.login_password);
+
+        // Check if the user exists in the database
         UserDataSource dataSource = new UserDataSource(this);
         List<User> users = dataSource.findAll();
         boolean validUser = false;
         for (User user : users) {
-            if (user.getUsername().equals(username.getText().toString())
-                    && user.getPassword().equals(password.getText().toString())) {
+            if (user.getUsername().equals(mUserName.getText().toString())
+                    && user.getPassword().equals(mPassword.getText().toString())) {
                 validUser = true;
-
             }
         }
+        // if it is a valid user, allow them to log in
         if (validUser) {
-            user = username.getText().toString();
+            sUser = mUserName.getText().toString();
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("username", username.getText().toString());
             Toast.makeText(this, "Logging in", Toast.LENGTH_LONG).show();
             startActivity(intent);
             finish();
@@ -83,11 +117,17 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Create account button listener, allow the user to move
+     * into register activity to create an account once the button
+     * is clicked.
+     * @param view reference of the widget that was clicked
+     */
     public void createAccountOnClick(View view) {
-        username = (EditText) findViewById(R.id.login_username);
-        password = (EditText) findViewById(R.id.login_password);
-        username.setText("");
-        password.setText("");
+        mUserName = (EditText) findViewById(R.id.login_username);
+        mPassword = (EditText) findViewById(R.id.login_password);
+        mUserName.setText("");
+        mPassword.setText("");
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }

@@ -1,4 +1,4 @@
-package controller;
+package model.service;
 
 
 import java.io.BufferedReader;
@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * Created by Hieu on 10/24/2015.
  */
-public class ConnectionManager {
+public class MyConnection {
 
     public String getData(String uri) throws IOException {
         BufferedReader reader = null;

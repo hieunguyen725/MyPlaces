@@ -28,8 +28,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import model.MyAdapter;
 import model.Place;
-import parsers.JSONParser;
+import model.parsers.JSONParser;
+import model.service.MyConnection;
 
 public class RelatedSearchActivity extends AppCompatActivity {
 
@@ -67,6 +69,11 @@ public class RelatedSearchActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle selected menu option by the user
+     * @param item The selected menu item by the user
+     * @return true if menu item process was taken, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -75,34 +82,32 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 return true;
 
             case R.id.nearby_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the nearby search activity, start the nearby
+                // search activity
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
-                MainActivity.currentIntent = intentNearby;
+                MainActivity.sCurrentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
             case R.id.related_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the related search activity, start the related
+                // search activity
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
-                MainActivity.currentIntent = intentRelated;
+                MainActivity.sCurrentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
             case R.id.my_places:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose my places search activity, start my places activity
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
-                MainActivity.currentIntent = intentPlaces;
+                MainActivity.sCurrentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
+                // If we got here, the sUser's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -148,10 +153,10 @@ public class RelatedSearchActivity extends AppCompatActivity {
 
         @Override
         protected List<Place> doInBackground(String... params) {
-            ConnectionManager connectionManager = new ConnectionManager();
+            MyConnection myConnection = new MyConnection();
             String content = null;
             try {
-                content = connectionManager.getData(params[0]);
+                content = myConnection.getData(params[0]);
                 if (content != null) {
                     List<Place> places = new JSONParser().searchParse(content, "related");
                     return places;

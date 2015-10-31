@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -31,53 +29,76 @@ import android.widget.Toast;
 import com.example.hieunguyen725.myplaces.R;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
+import model.MyAdapter;
 import model.Place;
-import parsers.JSONParser;
+import model.parsers.JSONParser;
+import model.service.MyConnection;
 
+/**
+ * Author: Hieu Nguyen
+ *
+ * This is an activity that will the user to search for nearby places
+ * according to their device location using GPS connection.
+ */
 public class NearbySearchActivity extends AppCompatActivity {
 
     public static final String TAG = "NearbySearchActivity";
-    private static final String API_KEY = "&key=AIzaSyCYoO7HjswFyU9zNWR7kP_kJoWs_IlQIuI";
-    private static final String BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private static final String API_KEY = "&key=AIzaSyCYoO7HjswFyU9zN" +
+            "WR7kP_kJoWs_IlQIuI";
+    private static final String BASE_URL = "https://maps.googleapis.com" +
+            "/maps/api/place/nearbysearch/json?";
 
-    private ProgressBar progressBar;
-    private EditText keyword;
-    private EditText radius;
+    private static List<Place> sCurrentPlaces;
 
-    private Location myLocation;
+    private ProgressBar mProgressBar;
+    private EditText mKeyword;
+    private EditText mRadius;
+    private Location mLocation;
 
-    private static List<Place> currentPlaces;
-
+    /**
+     * On Create method to initialize and inflate the activity's
+     * user interface. Also to check for device location permission
+     * during runtime, as required for API 23.
+     * @param savedInstanceState Bundle containing the data most recently
+     *                           saved data through onSaveInstanceState,
+     *                           null if nothing was saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_search);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         checkPermission();
-        progressBar = (ProgressBar) findViewById(R.id.nearbySearch_progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
-        Log.i(TAG, "Nearby onCreate called");
+        mProgressBar = (ProgressBar) findViewById(R.id.nearbySearch_progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Display the current list of places when on resume
+     * is called.
+     */
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentPlaces != null) {
+        if (sCurrentPlaces != null) {
             displayList();
         }
     }
 
+    /**
+     * If the device location permission is granted, use the system
+     * location service to obtain the last known or current
+     * location of the device. Also to update the location if changed.
+     */
     private void getLocation() {
         if(checkPermission()) {
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            LocationManager locationManager = (LocationManager)
+                    getSystemService(Context.LOCATION_SERVICE);
             final LocationListener locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
-                    myLocation = location;
+                    mLocation = location;
                 }
 
                 @Override
@@ -95,16 +116,25 @@ public class NearbySearchActivity extends AppCompatActivity {
                     Log.i(TAG, "location provider disabled");
                 }
             };
+            // Check whether if the GPS provider exists and if it is enabled in the device
+            // If the GPS is enabled, request location updates.
             if (locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)
                     && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, locationListener);
+                // request location update with the location listener to use onLocationChanged(),
+                // given the name of the provider, minimum time interval as 5 seconds,
+                // and minimum distance as 10 meters between location updates
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        5000, 10, locationListener);
             }
-            myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
     }
 
     /**
-     * Required runtime permission check for android 6.0 or API 23 and higher
+     * Check for device location permission during runtime. Return true
+     * if the device location permission is already granted, else request
+     * for permission and return false. Runtime permission check is required
+     * in API 23.
      */
     private boolean checkPermission() {
         int gpsPermission = ContextCompat.checkSelfPermission(this,
@@ -113,13 +143,19 @@ public class NearbySearchActivity extends AppCompatActivity {
             Log.i(TAG, "permissions granted");
             return true;
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-//            Toast.makeText(this, "Device location access permission was denied", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Device location access permission was denied");
+            String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION};
+            // request for device location permission with a result id code as 0
+            ActivityCompat.requestPermissions(this, permission, 0);
             return false;
         }
     }
 
+    /**
+     * Initialize the option menu content for this activity
+     * @param menu The option menu object to be inflated with the menu layout
+     * @return true to display the menu, false to not display the menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -127,6 +163,11 @@ public class NearbySearchActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle selected menu option by the user
+     * @param item The selected menu item by the user
+     * @return true if menu item process was taken, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -135,69 +176,94 @@ public class NearbySearchActivity extends AppCompatActivity {
                 return true;
 
             case R.id.nearby_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the nearby search activity, start the nearby
+                // search activity
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
-                MainActivity.currentIntent = intentNearby;
+                MainActivity.sCurrentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
             case R.id.related_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the related search activity, start the related
+                // search activity
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
-                MainActivity.currentIntent = intentRelated;
+                MainActivity.sCurrentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
             case R.id.my_places:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose my places search activity, start my places activity
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
-                MainActivity.currentIntent = intentPlaces;
+                MainActivity.sCurrentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
+                // If we got here, the sUser's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
 
+    /**
+     * Search button on click listener, get the user's current location
+     * and their location inputs. Then use those information to make
+     * a web service request to the Google Places to retrieve possible
+     * places.
+     * @param view reference of the widget that was clicked on.
+     */
     public void searchButtonOnClick(View view) {
-        InputMethodManager inputManager = (InputMethodManager)
+        // Once the search button is clicked, hide the soft keyboard
+        // from the screen.
+        InputMethodManager inputMethodManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+        // Hide the keyboard from the screen unless it is forced to
+        // open up as required for edit text for input.
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
         if (isOnline()) {
             getLocation();
-            if (myLocation != null) {
-                keyword = (EditText) findViewById(R.id.nearbySearch_keyword);
-                radius = (EditText) findViewById(R.id.nearbySearch_radius);
-                if (keyword.getText().toString().equals("") || radius.getText().toString().equals("")) {
-                    Toast.makeText(this, "Invalid Keyword/Radius", Toast.LENGTH_LONG).show();
+            // If the current location is available, retrieve the user's
+            // inputs and make the web service request.
+            if (mLocation != null) {
+                mKeyword = (EditText) findViewById(R.id.nearbySearch_keyword);
+                mRadius = (EditText) findViewById(R.id.nearbySearch_radius);
+                if (mKeyword.getText().toString().equals("") ||
+                        mRadius.getText().toString().equals("")) {
+                    Toast.makeText(this, "Invalid Keyword/Radius",
+                            Toast.LENGTH_LONG).show();
                 } else {
-                    String locationText = "&location=" + myLocation.getLatitude() + "," + myLocation.getLongitude();
+                    // If the required inputs are not blank, retrieve the information
+                    // and start the web service request.
+                    String locationText = "&location=" + mLocation.getLatitude()
+                            + "," + mLocation.getLongitude();
                     double metersPerMile = 1609.34;
-                    int myRadius = (int) (Double.parseDouble(radius.getText().toString()) * metersPerMile);
+                    int myRadius = (int) (Double.parseDouble(mRadius.getText().
+                            toString()) * metersPerMile);
                     String radiusText = "&radius=" + myRadius;
-                    String keywordText = "&keyword=" + keyword.getText().toString().replace(" ", "_");
-                    String URL = BASE_URL + locationText + radiusText + keywordText + API_KEY;
+                    String keywordText = "&keyword=" + mKeyword.getText().
+                            toString().replace(" ", "_");
+                    String URL = BASE_URL + locationText + radiusText
+                            + keywordText + API_KEY;
                     SearchTask task = new SearchTask();
                     task.execute(URL);
                 }
             } else {
-                Toast.makeText(this, "Device location is not enabled", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Device location is not enabled",
+                        Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(this, "Network connection is not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Network connection is not available",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * Check whether the device is connected to a network.
+     * @return true network is available and is connected/connecting,
+     * false otherwise.
+     */
     private boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -210,22 +276,41 @@ public class NearbySearchActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * A class representing a search locations task extending AsyncTask.
+     * This class will be making web service request to the Google Places
+     * and generate a list of possible nearby locations matching the user's
+     * inputs.
+     */
     private class SearchTask extends AsyncTask<String, String, List<Place>> {
 
+        /**
+         * Preparing to execute task.
+         */
         @Override
         protected void onPreExecute() {
             Log.i(TAG, "Starting task");
-            progressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * Use the connection to make a http request to the
+         * web service.
+         * @param params a String URL for making the service request.
+         * @return a list of possible nearby location matching the
+         * user's request inputs. Null if no matching content.
+         */
         @Override
         protected List<Place> doInBackground(String... params) {
-            ConnectionManager connectionManager = new ConnectionManager();
+            MyConnection myConnection = new MyConnection();
             String content = null;
             try {
-                content = connectionManager.getData(params[0]);
+                content = myConnection.getData(params[0]);
                 if (content != null) {
-                    List<Place> places = new JSONParser().searchParse(content, "nearby");
+                    // Get a list of places by parsing the JSON
+                    // text content.
+                    List<Place> places = new JSONParser().
+                            searchParse(content, "nearby");
                     return places;
                 }
             } catch (IOException e) {
@@ -234,38 +319,30 @@ public class NearbySearchActivity extends AppCompatActivity {
             return null;
         }
 
-        private List<Place> getIcons(List<Place> places) {
-            for (Place place : places) {
-                try {
-                    String iconURL = place.getIconURL();
-                    InputStream inputStream = (InputStream)
-                            new URL(iconURL).getContent();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    place.setIcon(bitmap);
-                    inputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return places;
-        }
-
+        /**
+         * Given the list of possible places, display the places if
+         * they are not null.
+         * @param places the list of matching places from the
+         *               web service request.
+         */
         @Override
         protected void onPostExecute(List<Place> places) {
             if (places != null) {
-                currentPlaces = places;
-//                Log.i(TAG, places.toString());
+                sCurrentPlaces = places;
                 displayList();
             } else {
                 Log.i(TAG, "can't parse, places is null");
             }
-            progressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
             Log.i(TAG, "task finished");
         }
     }
 
+    /**
+     * Display the user's current list of places on the user interface
+     */
     private void displayList() {
-        ListAdapter listAdapter = new MyAdapter(this, currentPlaces);
+        ListAdapter listAdapter = new MyAdapter(this, sCurrentPlaces);
         ListView listView = (ListView) findViewById(R.id.nearbySearch_listview);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

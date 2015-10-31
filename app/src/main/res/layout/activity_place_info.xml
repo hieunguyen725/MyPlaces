@@ -43,7 +43,8 @@
                     android:layout_toStartOf="@+id/placeInfo_save_button"
                     android:background="#E91E63"
                     android:layout_marginRight="20dp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:onClick="shareButtonOnClick" />
 
                 <Button
                     android:layout_width="100dp"

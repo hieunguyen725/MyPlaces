@@ -1,4 +1,4 @@
-package database;
+package model.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,7 +33,7 @@ public class UserDataSource {
 
     public void open() {
         Log.i(TAG, "Database opened");
-//        database = dbhelper.getWritableDatabase();
+//        model.database = dbhelper.getWritableDatabase();
     }
 
     public void close() {

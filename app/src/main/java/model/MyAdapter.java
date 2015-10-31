@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,12 +18,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-import model.Place;
-
 /**
  * Created by hieunguyen725 on 10/26/2015.
  */
-class MyAdapter extends ArrayAdapter<Place> {
+public class MyAdapter extends ArrayAdapter<Place> {
 
     public static final String TAG = "MyAdapter";
 
@@ -44,11 +42,11 @@ class MyAdapter extends ArrayAdapter<Place> {
         placeAddress.setText(place.getAddress());
 
         if (place.getIcon() != null) {
-            Log.i(TAG, "Image at position " + position + "is not null");
+            Log.i(TAG, "Image at position " + position + " is not null");
             ImageView placeIcon = (ImageView) theView.findViewById(R.id.row_layout_2_image);
             placeIcon.setImageBitmap(place.getIcon());
         } else {
-            Log.i(TAG, "Image at position " + position + "is null");
+            Log.i(TAG, "Image at position " + position + " is null");
             GetIcon task = new GetIcon();
             task.execute(new PlaceViewContainer(place, theView));
         }

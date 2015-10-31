@@ -12,9 +12,12 @@ import com.example.hieunguyen725.myplaces.R;
 
 import java.util.List;
 
-import database.UserDataSource;
+import model.database.UserDataSource;
 import model.User;
 
+/**
+ *
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText username;

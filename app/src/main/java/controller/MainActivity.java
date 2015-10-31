@@ -1,103 +1,54 @@
 package controller;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.hieunguyen725.myplaces.R;
 
-import java.util.List;
-
-import database.PlacesDataSource;
-import model.Place;
-
+/**
+ * Author: Hieu Nguyen
+ *
+ * Main activity, this activity will choose which activity
+ * to show the user throughout the application.
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
-//    protected static String user;
-    protected static Intent currentIntent;
+    protected static Intent sCurrentIntent;
 
-    PlacesDataSource dataSource;
+    /**
+     * On Create method to initialize and inflate the activity's
+     * user interface, also to choose which user's intent activity to
+     * start next.
+     * @param savedInstanceState Bundle containing the data most recently
+     *                           saved data through onSaveInstanceState,
+     *                           null if nothing was saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        checkPermission();
-        if (currentIntent == null) {
-            Intent intentNearby = new Intent(this, NearbySearchActivity.class);
+
+        // Check whether if user's intent activity is null, if it is
+        // start the related search activity, else start the user's
+        // intent activity.
+        if (sCurrentIntent == null) {
+            Intent intentNearby = new Intent(this, RelatedSearchActivity.class);
             startActivity(intentNearby);
         } else {
-            startActivity(currentIntent);
+            startActivity(sCurrentIntent);
         }
-
-
-//        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
-//        TabHost tabHost = getTabHost();
-//
-//        TabHost.TabSpec tab1 = tabHost.newTabSpec("First Tab");
-//        TabHost.TabSpec tab2 = tabHost.newTabSpec("Second Tab");
-//        TabHost.TabSpec tab3 = tabHost.newTabSpec("Third Tab");
-//
-//        tab1.setIndicator("Nearby Search");
-//        tab2.setIndicator("Related Search");
-//        tab3.setIndicator("My Places");
-//
-//        tab1.setContent(new Intent(this, NearbySearchActivity.class));
-//        tab2.setContent(new Intent(this, RelatedSearchActivity.class));
-//        tab3.setContent(new Intent(this, MyPlacesActivity.class));
-//
-//        tabHost.addTab(tab1);
-//        tabHost.addTab(tab2);
-//        tabHost.addTab(tab3);
-
-//        testDB();
-    }
-
-    public void testDB() {
-        dataSource = new PlacesDataSource(this);
-        createData();
-    }
-
-    private void createData() {
-//        Place place = new Place("id = 3", "Test Location 3", "1234 44th ave s", "local address", -11.0, 11.0);
-//        place.setUsername("Hieu");
-//        dataSource.create(place);
-//        place = new Place("id = 4", "Test Location 4", "4321 99th ave s", "local address", -101.0, 1111.0);
-//        place.setUsername("Hieu");
-//        dataSource.create(place);
-//        place = new Place("id = 5", "Test Location 5", "4321 99th ave s", "local address", -101.0, 1111.0);
-//        place.setUsername("Nguyen");
-//        dataSource.create(place);
-        List<Place> places = dataSource.findUserPlaces("username = 'Hieu'");
-        Log.i(TAG, places.toString());
-
     }
 
     /**
-     * Required runtime permission check for android 6.0 or API 23 and higher
+     * Initialize the option menu content for this activity
+     * @param menu The option menu object to be inflated with the menu layout
+     * @return true to display the menu, false to not display the menu
      */
-    public boolean checkPermission() {
-        int gpsPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "permissions granted");
-            return true;
-        } else {
-            Log.i(TAG, "permission not granted");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-            return false;
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -105,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle selected menu option by the user
+     * @param item The selected menu item by the user
+     * @return true if menu item process was taken, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -113,34 +69,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.nearby_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the nearby search activity, start the nearby
+                // search activity
                 Intent intentNearby = new Intent(this, NearbySearchActivity.class);
-                MainActivity.currentIntent = intentNearby;
+                MainActivity.sCurrentIntent = intentNearby;
                 startActivity(intentNearby);
                 return true;
 
             case R.id.related_search:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose the related search activity, start the related
+                // search activity
                 Intent intentRelated = new Intent(this, RelatedSearchActivity.class);
-                MainActivity.currentIntent = intentRelated;
+                MainActivity.sCurrentIntent = intentRelated;
                 startActivity(intentRelated);
                 return true;
 
             case R.id.my_places:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // User chose my places search activity, start my places activity
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
-                MainActivity.currentIntent = intentPlaces;
+                MainActivity.sCurrentIntent = intentPlaces;
                 startActivity(intentPlaces);
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
+                // If we got here, the sUser's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
+
     }
+
 }

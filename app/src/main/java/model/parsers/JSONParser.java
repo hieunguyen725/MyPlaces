@@ -1,4 +1,4 @@
-package parsers;
+package model.parsers;
 
 import android.util.Log;
 

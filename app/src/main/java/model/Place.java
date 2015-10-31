@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Place {
 
-    // Required Fields in database
+    // Required Fields in model.database
     private String placeID;
     private String username;
     private String name;
@@ -20,7 +20,7 @@ public class Place {
     private String phoneNumber;
     private String contentResource;
 
-    // required but not in database
+    // required but not in model.database
     private Bitmap icon;
     private double lat;
     private double lng;
