@@ -13,72 +13,96 @@ import java.util.List;
 import model.Place;
 
 /**
- * Created by Hieu on 10/24/2015.
+ * Author: Hieu Nguyen
+ *
+ * This is a class representing a source of places data. It helps
+ * with connecting the application's SQLite database to retrieve
+ * and insert new data for the Place table.
  */
 public class PlacesDataSource {
     public static final String TAG = "PlacesDataSource";
 
-    SQLiteOpenHelper dbhelper;
-    SQLiteDatabase database;
+    private SQLiteOpenHelper mSQLiteOpenHelper;
+    private SQLiteDatabase mSQLiteDatabase;
 
+    /**
+     * String array representing all the columns for in the
+     * places table of the database.
+     */
     private static final String[] allColumns = {
-            DBOpenHelper.PlacesTable.Columns.PLACE_ID,
-            DBOpenHelper.PlacesTable.Columns.USERNAME,
-            DBOpenHelper.PlacesTable.Columns.NAME,
-            DBOpenHelper.PlacesTable.Columns.ADDRESS,
-            DBOpenHelper.PlacesTable.Columns.MAIN_TYPE,
-            DBOpenHelper.PlacesTable.Columns.DESCRIPTION,
-            DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER,
-            DBOpenHelper.PlacesTable.Columns.ICON_URL,
-            DBOpenHelper.PlacesTable.Columns.CONTENT_RESOURCE
+            MyDatabase.PlacesTable.Columns.PLACE_ID,
+            MyDatabase.PlacesTable.Columns.USERNAME,
+            MyDatabase.PlacesTable.Columns.NAME,
+            MyDatabase.PlacesTable.Columns.ADDRESS,
+            MyDatabase.PlacesTable.Columns.MAIN_TYPE,
+            MyDatabase.PlacesTable.Columns.DESCRIPTION,
+            MyDatabase.PlacesTable.Columns.PHONE_NUMBER,
+            MyDatabase.PlacesTable.Columns.ICON_URL,
+            MyDatabase.PlacesTable.Columns.CONTENT_RESOURCE
     };
 
+    /**
+     * Constructing a new PlacesDataSource.
+     * @param context reference to the application's context.
+     */
     public PlacesDataSource(Context context) {
-        dbhelper = new DBOpenHelper(context);
-        database = dbhelper.getWritableDatabase();
+        mSQLiteOpenHelper = new MyDatabase(context);
+        mSQLiteDatabase = mSQLiteOpenHelper.getWritableDatabase();
     }
 
-    public void open() {
-        Log.i(TAG, "Database opened");
-//        model.database = dbhelper.getWritableDatabase();
-    }
 
+    /**
+     * Close the database.
+     */
     public void close() {
         Log.i(TAG, "Database closed");
-        dbhelper.close();
+        mSQLiteOpenHelper.close();
     }
 
+    /**
+     * Given a place, insert the new place with its values
+     * into the Place table.
+     * @param place reference to the place to be insert into
+     *              the database table.
+     */
     public void create(Place place) {
         ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.PlacesTable.Columns.PLACE_ID, place.getPlaceID());
-        values.put(DBOpenHelper.PlacesTable.Columns.USERNAME, place.getUsername());
-        values.put(DBOpenHelper.PlacesTable.Columns.NAME, place.getName());
-        values.put(DBOpenHelper.PlacesTable.Columns.ADDRESS, place.getAddress());
-        values.put(DBOpenHelper.PlacesTable.Columns.MAIN_TYPE, place.getMainType());
-        values.put(DBOpenHelper.PlacesTable.Columns.DESCRIPTION, place.getDescription());
-        values.put(DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER, place.getPhoneNumber());
-        values.put(DBOpenHelper.PlacesTable.Columns.ICON_URL, place.getIconURL());
-        values.put(DBOpenHelper.PlacesTable.Columns.CONTENT_RESOURCE, place.getContentResource());
-        database.insert(DBOpenHelper.PlacesTable.NAME, null, values);
+        values.put(MyDatabase.PlacesTable.Columns.PLACE_ID, place.getPlaceID());
+        values.put(MyDatabase.PlacesTable.Columns.USERNAME, place.getUsername());
+        values.put(MyDatabase.PlacesTable.Columns.NAME, place.getName());
+        values.put(MyDatabase.PlacesTable.Columns.ADDRESS, place.getAddress());
+        values.put(MyDatabase.PlacesTable.Columns.MAIN_TYPE, place.getMainType());
+        values.put(MyDatabase.PlacesTable.Columns.DESCRIPTION, place.getDescription());
+        values.put(MyDatabase.PlacesTable.Columns.PHONE_NUMBER, place.getPhoneNumber());
+        values.put(MyDatabase.PlacesTable.Columns.ICON_URL, place.getIconURL());
+        values.put(MyDatabase.PlacesTable.Columns.CONTENT_RESOURCE, place.getContentResource());
+        mSQLiteDatabase.insert(MyDatabase.PlacesTable.NAME, null, values);
     }
 
+    /**
+     * Given a selection String to limit the table's tuples, find all the place
+     * belonging the a username then return the places.
+     * @param selection a username selection to limit the table's tuples.
+     * @return  a list of all the places with its username matching
+     *          the username.
+     */
     public List<Place> findUserPlaces(String selection) {
         List<Place> places = new ArrayList<Place>();
-        Cursor cursor = database.query(DBOpenHelper.PlacesTable.NAME, allColumns,
+        Cursor cursor = mSQLiteDatabase.query(MyDatabase.PlacesTable.NAME, allColumns,
                 selection, null, null, null, null);
         Log.i(TAG, "Returned " + cursor.getCount() + " rows");
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Place place = new Place();
-                place.setPlaceID(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.PLACE_ID)));
-                place.setUsername(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.USERNAME)));
-                place.setName(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.NAME)));
-                place.setAddress(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.ADDRESS)));
-                place.setMainType(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.MAIN_TYPE)));
-                place.setDescription(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.DESCRIPTION)));
-                place.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.PHONE_NUMBER)));
-                place.setIconURL(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.ICON_URL)));
-                place.setContentResource(cursor.getString(cursor.getColumnIndex(DBOpenHelper.PlacesTable.Columns.CONTENT_RESOURCE)));
+                place.setPlaceID(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.PLACE_ID)));
+                place.setUsername(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.USERNAME)));
+                place.setName(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.NAME)));
+                place.setAddress(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.ADDRESS)));
+                place.setMainType(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.MAIN_TYPE)));
+                place.setDescription(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.DESCRIPTION)));
+                place.setPhoneNumber(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.PHONE_NUMBER)));
+                place.setIconURL(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.ICON_URL)));
+                place.setContentResource(cursor.getString(cursor.getColumnIndex(MyDatabase.PlacesTable.Columns.CONTENT_RESOURCE)));
                 places.add(place);
             }
         }

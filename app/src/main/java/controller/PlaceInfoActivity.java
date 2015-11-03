@@ -203,7 +203,7 @@ public class PlaceInfoActivity extends AppCompatActivity {
             MyConnection myConnection = new MyConnection();
             String content = null;
             try {
-                content = myConnection.getData(params[0]);
+                content = myConnection.retrieveData(params[0]);
                 if (content != null) {
                     Log.i(TAG, "content is not null");
                     Log.i(TAG, "content length: " + content.length());

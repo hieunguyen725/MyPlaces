@@ -53,8 +53,6 @@ public class NearbySearchActivity extends AppCompatActivity {
     private static List<Place> sCurrentPlaces;
 
     private ProgressBar mProgressBar;
-    private EditText mKeyword;
-    private EditText mRadius;
     private Location mLocation;
 
     /**
@@ -227,10 +225,10 @@ public class NearbySearchActivity extends AppCompatActivity {
             // If the current location is available, retrieve the user's
             // inputs and make the web service request.
             if (mLocation != null) {
-                mKeyword = (EditText) findViewById(R.id.nearbySearch_keyword);
-                mRadius = (EditText) findViewById(R.id.nearbySearch_radius);
-                if (mKeyword.getText().toString().equals("") ||
-                        mRadius.getText().toString().equals("")) {
+                EditText keyword = (EditText) findViewById(R.id.nearbySearch_keyword);
+                EditText radius = (EditText) findViewById(R.id.nearbySearch_radius);
+                if (keyword.getText().toString().equals("") ||
+                        radius.getText().toString().equals("")) {
                     Toast.makeText(this, "Invalid Keyword/Radius",
                             Toast.LENGTH_LONG).show();
                 } else {
@@ -239,10 +237,10 @@ public class NearbySearchActivity extends AppCompatActivity {
                     String locationText = "&location=" + mLocation.getLatitude()
                             + "," + mLocation.getLongitude();
                     double metersPerMile = 1609.34;
-                    int myRadius = (int) (Double.parseDouble(mRadius.getText().
+                    int myRadius = (int) (Double.parseDouble(radius.getText().
                             toString()) * metersPerMile);
                     String radiusText = "&radius=" + myRadius;
-                    String keywordText = "&keyword=" + mKeyword.getText().
+                    String keywordText = "&keyword=" + keyword.getText().
                             toString().replace(" ", "_");
                     String URL = BASE_URL + locationText + radiusText
                             + keywordText + API_KEY;
@@ -305,7 +303,7 @@ public class NearbySearchActivity extends AppCompatActivity {
             MyConnection myConnection = new MyConnection();
             String content = null;
             try {
-                content = myConnection.getData(params[0]);
+                content = myConnection.retrieveData(params[0]);
                 if (content != null) {
                     // Get a list of places by parsing the JSON
                     // text content.

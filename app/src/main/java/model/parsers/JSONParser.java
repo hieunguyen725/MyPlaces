@@ -13,19 +13,34 @@ import controller.NearbySearchActivity;
 import model.Place;
 
 /**
- * Created by hieunguyen725 on 10/25/2015.
+ * Author: Hieu Nguyen
+ *
+ * This is class representing a helper class
+ * to parse JSON text content retrieved from the
+ * http reponse.
  */
 public class JSONParser {
 
-
+    /**
+     * Given the JSON string content and a search type, parse the content
+     * and return a list of all places from the content.
+     * @param myJSON the JSON string content received from the http
+     *               reponse.
+     * @param searchType the type of search (related search or nearby search)
+     * @return A list of all places parsed from the JSON content, null if none.
+     */
     public List<Place> searchParse(String myJSON, String searchType) {
         List<Place> resultPlaces = new ArrayList<Place>();
         Log.i(NearbySearchActivity.TAG, "starting to parse");
         try {
             JSONObject jsonObject = new JSONObject(myJSON);
             JSONArray results = jsonObject.getJSONArray("results");
+            // if there is one or more place in the result,
+            // start parsing the new places.
             if (results.length() > 0) {
                 Log.i(NearbySearchActivity.TAG, "results > 0");
+                // For each place in the result, parse that result place
+                // and add it to the list of places.
                 for (int i = 0; i < results.length(); i++) {
                     Place newPlace = new Place();
                     JSONObject result = results.getJSONObject(i);
@@ -36,6 +51,7 @@ public class JSONParser {
                     } else if (searchType.equalsIgnoreCase("related")) {
                         newPlace.setAddress(result.getString("formatted_address"));
                     }
+                    // Get the location to parse the latitude and longitude.
                     JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
                     newPlace.setLat(location.getDouble("lat"));
                     newPlace.setLng(location.getDouble("lng"));
@@ -52,10 +68,16 @@ public class JSONParser {
         return null;
     }
 
+    /**
+     * Given the JSON String content of information about a place, parse the
+     * content a return a place with the content's values.
+     * @param myJSON the JSON String content of information about a place.
+     * @return a place with parsed values from the JSON, null if error.
+     */
     public Place infoParse(String myJSON) {
         Place newPlace = new Place();
         try {
-            // basic info
+            // Retrieve basic information about the place.
             JSONObject jsonObject = new JSONObject(myJSON);
             JSONObject resultInfo = jsonObject.getJSONObject("result");
             newPlace.setPlaceID(resultInfo.getString("place_id"));
@@ -66,7 +88,7 @@ public class JSONParser {
             newPlace.setLng(location.getDouble("lng"));
             newPlace.setIconURL(resultInfo.getString("icon"));
             newPlace.setMainType(resultInfo.getJSONArray("types").getString(0).replace("_", " "));
-            // extra info
+            // Retrieve extra information about the place.
             if (resultInfo.has("photos")) {
                 newPlace.setImageReferences(new ArrayList<String>());
                 JSONArray photos = resultInfo.getJSONArray("photos");
@@ -91,6 +113,9 @@ public class JSONParser {
             if (resultInfo.has("reviews")) {
                 JSONArray reviews = resultInfo.getJSONArray("reviews");
                 String reviewsText = "";
+                // for each review, retrieve the review text and concatenate
+                // them into a string of reviews with a number in front of
+                // each review.
                 for (int i = 0; i < reviews.length(); i++) {
                     JSONObject review = reviews.getJSONObject(i);
                     reviewsText += (i + 1) + ".   " + review.getString("text") + "\n\n";

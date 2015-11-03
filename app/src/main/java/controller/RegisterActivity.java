@@ -16,20 +16,33 @@ import model.database.UserDataSource;
 import model.User;
 
 /**
+ * Author: Hieu Nguyen
  *
+ * This is an activity that will allow the user to register for
+ * a new user account by putting in their new username and password.
+ * This class will then store the new data into the database.
  */
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText username;
-    private EditText password;
-    private EditText confirmPassword;
 
+    /**
+     * On Create method to initialize and inflate the activity's
+     * user interface.
+     * @param savedInstanceState Bundle containing the data most recently
+     *                           saved data through onSaveInstanceState,
+     *                           null if nothing was saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
     }
 
+    /**
+     * Initialize the option menu content for this activity
+     * @param menu The option menu object to be inflated with the menu layout
+     * @return true to display the menu, false to not display the menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -37,6 +50,11 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle selected menu option by the user
+     * @param item The selected menu item by the user
+     * @return true if menu item process was taken, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -53,10 +71,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Retrieve the user's input including username and password, validate the
+     * new username then store the new username and password is the new account
+     * is valid.
+     * @param view reference to the widget that was clicked on.
+     */
     public void createButtonOnClick(View view) {
-        username = (EditText) findViewById(R.id.register_username);
-        password = (EditText) findViewById(R.id.register_password);
-        confirmPassword = (EditText) findViewById(R.id.register_confirm_password);
+        EditText username = (EditText) findViewById(R.id.register_username);
+        EditText password = (EditText) findViewById(R.id.register_password);
+        EditText confirmPassword = (EditText) findViewById(R.id.register_confirm_password);
+
+        // validate the user's inputs
         if (password.getText().toString().equals("") ||
                 confirmPassword.getText().toString().equals("") ||
                 username.getText().toString().equals("")) {
@@ -66,6 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
             Toast.makeText(this, "Password/Confirm Password do not match", Toast.LENGTH_LONG).show();
         } else {
+            // check to see if the user is already exist in the database
             UserDataSource dataSource = new UserDataSource(this);
             List<User> users = dataSource.findAll();
             boolean validAccount = true;

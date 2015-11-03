@@ -179,7 +179,11 @@ public class MyPlacesActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Add place button on click listener, launch a new activity
+     * for the user to add a new place.
+     * @param view reference to the widget that was clicked on.
+     */
     public void addPlaceOnClick(View view) {
         Intent intent = new Intent(this, AddPlaceActivity.class);
         startActivity(intent);

@@ -13,53 +13,74 @@ import java.util.List;
 import model.User;
 
 /**
- * Created by Hieu on 10/23/2015.
+ * Author: Hieu Nguyen
+ *
+ * This is a class representing a source of places data. It helps
+ * with connecting the application's SQLite database to retrieve
+ * and insert new data for the User table.
  */
 public class UserDataSource {
     public static final String TAG = "UserDataSource";
 
-    SQLiteOpenHelper dbhelper;
-    SQLiteDatabase database;
+    SQLiteOpenHelper mSQLiteOpenHelper;
+    SQLiteDatabase mSQLiteDatabase;
 
+    /**
+     * String array representing all the columns for in the
+     * User table of the database.
+     */
     private static final String[] allColumns = {
-            DBOpenHelper.UserTable.Columns.USERNAME,
-            DBOpenHelper.UserTable.Columns.PASSWORD
+            MyDatabase.UserTable.Columns.USERNAME,
+            MyDatabase.UserTable.Columns.PASSWORD
     };
 
+    /**
+     * Constructing a new UserDataSource.
+     * @param context reference to the application's context.
+     */
     public UserDataSource(Context context) {
-        dbhelper = new DBOpenHelper(context);
-        database = dbhelper.getWritableDatabase();
+        mSQLiteOpenHelper = new MyDatabase(context);
+        mSQLiteDatabase = mSQLiteOpenHelper.getWritableDatabase();
     }
 
-    public void open() {
-        Log.i(TAG, "Database opened");
-//        model.database = dbhelper.getWritableDatabase();
-    }
-
+    /**
+     * Close the database.
+     */
     public void close() {
         Log.i(TAG, "Database closed");
-        dbhelper.close();
+        mSQLiteOpenHelper.close();
     }
 
+    /**
+     * Given a user, insert the new user with its values
+     * into the User table.
+     * @param user reference to the user to be insert into
+     *              the database table.
+     */
     public void create(User user) {
         ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.UserTable.Columns.USERNAME, user.getUsername());
-        values.put(DBOpenHelper.UserTable.Columns.PASSWORD, user.getPassword());
-        database.insert(DBOpenHelper.UserTable.NAME, null, values);
+        values.put(MyDatabase.UserTable.Columns.USERNAME, user.getUsername());
+        values.put(MyDatabase.UserTable.Columns.PASSWORD, user.getPassword());
+        mSQLiteDatabase.insert(MyDatabase.UserTable.NAME, null, values);
     }
 
+    /**
+     * Find all the users in the User table from the database schema and
+     * return them.
+     * @return a list of all the users from the User table.
+     */
     public List<User> findAll() {
         List<User> users = new ArrayList<User>();
-        Cursor cursor = database.query(DBOpenHelper.UserTable.NAME, allColumns,
+        Cursor cursor = mSQLiteDatabase.query(MyDatabase.UserTable.NAME, allColumns,
         null, null, null, null, null);
         Log.i(TAG, "Returned " + cursor.getCount() + " rows");
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 User user = new User(
                         cursor.getString(cursor.getColumnIndex(
-                                DBOpenHelper.UserTable.Columns.USERNAME)),
+                                MyDatabase.UserTable.Columns.USERNAME)),
                         cursor.getString(cursor.getColumnIndex(
-                                DBOpenHelper.UserTable.Columns.PASSWORD)));
+                                MyDatabase.UserTable.Columns.PASSWORD)));
                 users.add(user);
             }
         }

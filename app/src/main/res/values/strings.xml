@@ -12,6 +12,6 @@
     <string name="title_activity_add_place">Add Place</string>
     <string name="title_activity_place_info">Place Info</string>
     <string name="nearby_search">Nearby</string>
-    <string name="related_search">Related</string>
-    <string name="my_places">Places</string>
+    <string name="related_search">Search</string>
+    <string name="my_places">My Places</string>
 </resources>
