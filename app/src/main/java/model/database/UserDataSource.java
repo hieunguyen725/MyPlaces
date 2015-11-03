@@ -69,7 +69,7 @@ public class UserDataSource {
      * return them.
      * @return a list of all the users from the User table.
      */
-    public List<User> findAll() {
+    public List<User> findAllUser() {
         List<User> users = new ArrayList<User>();
         Cursor cursor = mSQLiteDatabase.query(MyDatabase.UserTable.NAME, allColumns,
         null, null, null, null, null);

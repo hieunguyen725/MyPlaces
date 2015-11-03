@@ -97,7 +97,7 @@ public class LogInActivity extends AppCompatActivity {
 
         // Check if the user exists in the database
         UserDataSource dataSource = new UserDataSource(this);
-        List<User> users = dataSource.findAll();
+        List<User> users = dataSource.findAllUser();
         boolean validUser = false;
         for (User user : users) {
             if (user.getUsername().equals(mUserName.getText().toString())

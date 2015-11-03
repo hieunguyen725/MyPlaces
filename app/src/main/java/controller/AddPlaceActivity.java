@@ -22,7 +22,7 @@ import model.Place;
  */
 public class AddPlaceActivity extends AppCompatActivity {
 
-    public static final String ICON_URL = "https://maps.gstatic.com/mapfiles/" +
+    private static final String ICON_URL = "https://maps.gstatic.com/mapfiles/" +
             "place_api/icons/geocode-71.png";
 
     /**

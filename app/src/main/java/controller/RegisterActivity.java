@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             // check to see if the user is already exist in the database
             UserDataSource dataSource = new UserDataSource(this);
-            List<User> users = dataSource.findAll();
+            List<User> users = dataSource.findAllUser();
             boolean validAccount = true;
             for (User user : users) {
                 if (user.getUsername().equals(username.getText().toString())) {

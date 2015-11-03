@@ -24,16 +24,16 @@ public class JSONParser {
     /**
      * Given the JSON string content and a search type, parse the content
      * and return a list of all places from the content.
-     * @param myJSON the JSON string content received from the http
+     * @param jsonContent the JSON string content received from the http
      *               reponse.
      * @param searchType the type of search (related search or nearby search)
      * @return A list of all places parsed from the JSON content, null if none.
      */
-    public List<Place> searchParse(String myJSON, String searchType) {
+    public List<Place> searchParse(String jsonContent, String searchType) {
         List<Place> resultPlaces = new ArrayList<Place>();
         Log.i(NearbySearchActivity.TAG, "starting to parse");
         try {
-            JSONObject jsonObject = new JSONObject(myJSON);
+            JSONObject jsonObject = new JSONObject(jsonContent);
             JSONArray results = jsonObject.getJSONArray("results");
             // if there is one or more place in the result,
             // start parsing the new places.
@@ -71,14 +71,14 @@ public class JSONParser {
     /**
      * Given the JSON String content of information about a place, parse the
      * content a return a place with the content's values.
-     * @param myJSON the JSON String content of information about a place.
+     * @param jsonContent the JSON String content of information about a place.
      * @return a place with parsed values from the JSON, null if error.
      */
-    public Place infoParse(String myJSON) {
+    public Place infoParse(String jsonContent) {
         Place newPlace = new Place();
         try {
             // Retrieve basic information about the place.
-            JSONObject jsonObject = new JSONObject(myJSON);
+            JSONObject jsonObject = new JSONObject(jsonContent);
             JSONObject resultInfo = jsonObject.getJSONObject("result");
             newPlace.setPlaceID(resultInfo.getString("place_id"));
             newPlace.setName(resultInfo.getString("name"));
