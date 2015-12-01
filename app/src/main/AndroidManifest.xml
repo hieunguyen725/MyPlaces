@@ -36,29 +36,17 @@
         <activity
             android:name="controller.NearbySearchActivity"
             android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_nearby_search"
-            android:parentActivityName="controller.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="controller.MainActivity" />
+            android:label="@string/title_activity_nearby_search">hi
         </activity>
         <activity
             android:name="controller.RelatedSearchActivity"
             android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_related_search"
-            android:parentActivityName="controller.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="controller.MainActivity" />
+            android:label="@string/title_activity_related_search">
         </activity>
         <activity
             android:name="controller.MyPlacesActivity"
             android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_my_places"
-            android:parentActivityName="controller.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="controller.MainActivity" />
+            android:label="@string/title_activity_my_places">
         </activity>
         <activity
             android:name="controller.AddPlaceActivity"

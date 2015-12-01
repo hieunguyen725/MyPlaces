@@ -2,6 +2,7 @@ package controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -95,9 +96,6 @@ public class RelatedSearchActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
 
             case R.id.nearby_search:
                 // User chose the nearby search activity, start the nearby
@@ -120,6 +118,19 @@ public class RelatedSearchActivity extends AppCompatActivity {
                 Intent intentPlaces = new Intent(this, MyPlacesActivity.class);
                 MainActivity.sCurrentIntent = intentPlaces;
                 startActivity(intentPlaces);
+                return true;
+
+            case R.id.log_out:
+                Intent logout = new Intent(this, LogInActivity.class);
+                MainActivity.sCurrentIntent = null;
+                LogInActivity.sUser = null;
+                SharedPreferences sharedPreferences =
+                        this.getSharedPreferences(getString(R.string.SHARED_PREFS), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(getString(R.string.LOGGEDIN), false);
+                editor.commit();
+                startActivity(logout);
+                finish();
                 return true;
 
             default:

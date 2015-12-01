@@ -14,4 +14,9 @@
     <string name="nearby_search">Nearby</string>
     <string name="related_search">Search</string>
     <string name="my_places">My Places</string>
+    <string name="log_out">Log Out</string>
+
+    <!--shared preference-->
+    <string name="SHARED_PREFS">com.example.hieunguyen725.myplaces.prefs</string>
+    <string name="LOGGEDIN">loggedin</string>
 </resources>

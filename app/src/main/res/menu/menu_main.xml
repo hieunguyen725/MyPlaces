@@ -2,11 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/related_search"
         android:title="@string/related_search"
@@ -21,4 +16,9 @@
         android:id="@+id/my_places"
         android:title="@string/my_places"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/log_out"
+        android:title="@string/log_out"
+        app:showAsAction="never"/>
 </menu>

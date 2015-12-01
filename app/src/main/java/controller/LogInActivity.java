@@ -2,6 +2,7 @@ package controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -43,6 +44,14 @@ public class LogInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        SharedPreferences sharedPreferences =
+                this.getSharedPreferences(getString(R.string.SHARED_PREFS), Context.MODE_PRIVATE);
+        boolean loggedIn = sharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false);
+        if (loggedIn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**
@@ -69,11 +78,6 @@ public class LogInActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -92,8 +96,11 @@ public class LogInActivity extends AppCompatActivity {
         // open up as required for edit text for input.
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
+
+
         mUserName = (EditText) findViewById(R.id.login_username);
         mPassword = (EditText) findViewById(R.id.login_password);
+
 
         // Check if the user exists in the database
         UserDataSource dataSource = new UserDataSource(this);
@@ -107,6 +114,11 @@ public class LogInActivity extends AppCompatActivity {
         }
         // if it is a valid user, allow them to log in
         if (validUser) {
+            SharedPreferences sharedPreferences =
+                    this.getSharedPreferences(getString(R.string.SHARED_PREFS), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getString(R.string.LOGGEDIN), true);
+            editor.commit();
             sUser = mUserName.getText().toString();
             Intent intent = new Intent(this, MainActivity.class);
             Toast.makeText(this, "Logging in", Toast.LENGTH_LONG).show();

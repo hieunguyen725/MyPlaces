@@ -1,5 +1,8 @@
 package controller;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -63,10 +66,20 @@ public class AddPlaceActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.log_out) {
+            Intent logout = new Intent(this, LogInActivity.class);
+            MainActivity.sCurrentIntent = null;
+            LogInActivity.sUser = null;
+            SharedPreferences sharedPreferences =
+                    this.getSharedPreferences(getString(R.string.SHARED_PREFS), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getString(R.string.LOGGEDIN), false);
+            editor.commit();
+            startActivity(logout);
+            finish();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
