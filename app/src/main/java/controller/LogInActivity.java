@@ -48,6 +48,7 @@ public class LogInActivity extends AppCompatActivity {
                 this.getSharedPreferences(getString(R.string.SHARED_PREFS), Context.MODE_PRIVATE);
         boolean loggedIn = sharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false);
         if (loggedIn) {
+            sUser = sharedPreferences.getString(getString(R.string.LOGGEDIN_USER), "");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -118,6 +119,7 @@ public class LogInActivity extends AppCompatActivity {
                     this.getSharedPreferences(getString(R.string.SHARED_PREFS), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(getString(R.string.LOGGEDIN), true);
+            editor.putString(getString(R.string.LOGGEDIN_USER), mUserName.getText().toString());
             editor.commit();
             sUser = mUserName.getText().toString();
             Intent intent = new Intent(this, MainActivity.class);

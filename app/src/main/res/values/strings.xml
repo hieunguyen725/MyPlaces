@@ -19,4 +19,5 @@
     <!--shared preference-->
     <string name="SHARED_PREFS">com.example.hieunguyen725.myplaces.prefs</string>
     <string name="LOGGEDIN">loggedin</string>
+    <string name="LOGGEDIN_USER">loggedin_user</string>
 </resources>

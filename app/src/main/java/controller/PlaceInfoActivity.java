@@ -1,16 +1,23 @@
 package controller;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -51,6 +58,7 @@ public class PlaceInfoActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private Place mCurrentPlace;
+    private Location mLocation;
 
     /**
      * On Create method to initialize and inflate the activity's
@@ -366,11 +374,96 @@ public class PlaceInfoActivity extends AppCompatActivity {
     }
 
     /**
-     * Share button on click listener, on yet implemented.
+     * Direction button on click listener, launch a google map direction
+     * browser or application to get the direction from the user's current location
+     * to the current place's address.
+     *
      * @param view  reference to the widget that was clicked on.
      */
-    public void shareButtonOnClick(View view) {
-        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_LONG).show();
+    public void directionButtonOnClick(View view) {
+        if (isOnline()) {
+            getLocation();
+            if (mLocation == null) {
+                Toast.makeText(this, "Device location is not enabled",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                String startAddr = "saddr=" + mLocation.getLatitude() + ","
+                        + mLocation.getLongitude();
+                String destinationAddr = "&daddr=" + mCurrentPlace.getAddress();
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?" + startAddr + destinationAddr));
+                intent.setClassName("com.google.android.apps.maps",
+                        "com.google.android.maps.MapsActivity");
+                startActivity(intent);
+            }
+        } else {
+            Toast.makeText(this, "Network connection is not available",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * If the device location permission is granted, use the system
+     * location service to obtain the last known or current
+     * location of the device. Also to update the location if changed.
+     */
+    private void getLocation() {
+        if(checkPermission()) {
+            LocationManager locationManager = (LocationManager)
+                    getSystemService(Context.LOCATION_SERVICE);
+            final LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    mLocation = location;
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    Log.i(TAG, "location status changed");
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                    Log.i(TAG, "location provider enabled");
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+                    Log.i(TAG, "location provider disabled");
+                }
+            };
+            // Check whether if the GPS provider exists and if it is enabled in the device
+            // If the GPS is enabled, request location updates.
+            if (locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)
+                    && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // request location update with the location listener to use onLocationChanged(),
+                // given the name of the provider, minimum time interval as 5 seconds,
+                // and minimum distance as 10 meters between location updates
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        5000, 10, locationListener);
+            }
+            mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+    }
+
+    /**
+     * Check for device location permission during runtime. Return true
+     * if the device location permission is already granted, else request
+     * for permission and return false. Runtime permission check is required
+     * in API 23.
+     */
+    private boolean checkPermission() {
+        int gpsPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "permissions granted");
+            return true;
+        } else {
+            Log.i(TAG, "Device location access permission was denied");
+            String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION};
+            // request for device location permission with a result id code as 0
+            ActivityCompat.requestPermissions(this, permission, 0);
+            return false;
+        }
     }
 
 

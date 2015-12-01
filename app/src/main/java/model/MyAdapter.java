@@ -152,4 +152,5 @@ public class MyAdapter extends ArrayAdapter<Place> {
             Log.i(TAG, "Task finished");
         }
     }
+
 }

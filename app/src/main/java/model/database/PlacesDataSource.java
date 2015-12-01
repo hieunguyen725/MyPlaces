@@ -108,5 +108,18 @@ public class PlacesDataSource {
         }
         return places;
     }
+
+    /**
+     * Given a username and placeID, delete that place for the user from
+     * the sqlite database.
+     *
+     * @param username the username that saved the place.
+     * @param placeID the placeID of the place.
+     */
+    public void deletePlace(String username, String placeID) {
+        String selection = MyDatabase.PlacesTable.Columns.PLACE_ID + " = '" + placeID +
+                "' AND " + MyDatabase.PlacesTable.Columns.USERNAME + " = '" + username + "'";
+        mSQLiteDatabase.delete(MyDatabase.PlacesTable.NAME, selection, null);
+    }
 }
 

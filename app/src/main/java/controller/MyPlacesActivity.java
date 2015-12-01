@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,8 @@ public class MyPlacesActivity extends AppCompatActivity {
     private PlacesDataSource mPlacesDataSource;
     private ProgressBar myProgressBar;
     private List<Place> mCurrentPlaces;
+
+    private ListAdapter mListAdapter;
 
     /**
      * On Create method to initialize and inflate the activity's
@@ -160,12 +164,65 @@ public class MyPlacesActivity extends AppCompatActivity {
     }
 
     /**
+     *  Create or build a context menu for the current view
+     *
+     * @param menu the context menu that is being built
+     * @param v the view for which the context menu is being built
+     * @param menuInfo Extra information about the item for which the
+     *                 context menu should be shown.
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        Log.d(TAG, "onCreateContextMenu called");
+        if (v.getId() == R.id.myPlaces_listView) {
+            AdapterView.AdapterContextMenuInfo info =
+                    (AdapterView.AdapterContextMenuInfo) menuInfo;
+            menu.setHeaderTitle(mCurrentPlaces.get(info.position).getName());
+            menu.add(Menu.NONE, 0, 0, "Share");
+            menu.add(Menu.NONE, 1, 1, "Delete");
+        }
+    }
+
+    /**
+     * Call when the context menu item is selected, get the selected item
+     * to see if the user want to share or delete a place.
+     *
+     * @param item the context menu item that was selected
+     * @return whether the call was proceed.
+     */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int menuIndex = item.getItemId();
+        String placeName = mCurrentPlaces.get(info.position).getName();
+        String placeID = mCurrentPlaces.get(info.position).getPlaceID();
+        String placeAddress = mCurrentPlaces.get(info.position).getAddress();
+        if (menuIndex == 0) {
+            String content = placeName + "\n" + placeAddress;
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, content);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        } else if (menuIndex == 1) {
+            PlacesDataSource placesDataSource = new PlacesDataSource(this);
+            placesDataSource.deletePlace(LogInActivity.sUser, placeID);
+            onResume();
+            Toast.makeText(this, placeName + " is deleted", Toast.LENGTH_LONG).show();
+        }
+        return true;
+    }
+
+    /**
      * Display the user's current list of places on the user interface
      */
     private void displayList() {
         ListAdapter listAdapter = new MyAdapter(this, mCurrentPlaces);
         ListView listView = (ListView) findViewById(R.id.myPlaces_listView);
         listView.setAdapter(listAdapter);
+        registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
