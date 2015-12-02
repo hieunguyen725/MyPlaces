@@ -320,6 +320,10 @@ public class PlaceInfoActivity extends AppCompatActivity {
         }
         if (!mCurrentPlace.getDescription().equals("Not available")) {
             placeDescription.setText("Description: " + mCurrentPlace.getDescription());
+        } else {
+            placeDescription.setHeight(0);
+            placeDescription.setWidth(0);
+            placeDescription.setPadding(0, 0, 0, 0);
         }
         if (mCurrentPlace.getOpeningHours() != null) {
             openingHours.setText("Opening hours: \n\n" + mCurrentPlace.getOpeningHours());

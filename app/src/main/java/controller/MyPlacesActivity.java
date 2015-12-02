@@ -209,7 +209,8 @@ public class MyPlacesActivity extends AppCompatActivity {
         } else if (menuIndex == 1) {
             PlacesDataSource placesDataSource = new PlacesDataSource(this);
             placesDataSource.deletePlace(LogInActivity.sUser, placeID);
-            onResume();
+            mCurrentPlaces.remove(info.position);
+            displayList();
             Toast.makeText(this, placeName + " is deleted", Toast.LENGTH_LONG).show();
         }
         return true;

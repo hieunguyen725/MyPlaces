@@ -117,9 +117,10 @@ public class PlacesDataSource {
      * @param placeID the placeID of the place.
      */
     public void deletePlace(String username, String placeID) {
-        String selection = MyDatabase.PlacesTable.Columns.PLACE_ID + " = '" + placeID +
-                "' AND " + MyDatabase.PlacesTable.Columns.USERNAME + " = '" + username + "'";
-        mSQLiteDatabase.delete(MyDatabase.PlacesTable.NAME, selection, null);
+        String selection = MyDatabase.PlacesTable.Columns.PLACE_ID + "=? AND "
+                + MyDatabase.PlacesTable.Columns.USERNAME + "=?";
+        String[] arguments = new String[]{placeID, username};
+        mSQLiteDatabase.delete(MyDatabase.PlacesTable.NAME, selection, arguments);
     }
 }
 
