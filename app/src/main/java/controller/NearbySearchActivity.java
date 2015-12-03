@@ -239,7 +239,8 @@ public class NearbySearchActivity extends AppCompatActivity {
                 EditText keyword = (EditText) findViewById(R.id.nearbySearch_keyword);
                 EditText radius = (EditText) findViewById(R.id.nearbySearch_radius);
                 if (keyword.getText().toString().equals("") ||
-                        radius.getText().toString().equals("")) {
+                        radius.getText().toString().equals("") ||
+                        !radius.getText().toString().matches("\\d+")) {
                     Toast.makeText(this, "Invalid Keyword/Radius",
                             Toast.LENGTH_LONG).show();
                 } else {

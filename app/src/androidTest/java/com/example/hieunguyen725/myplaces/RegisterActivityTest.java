@@ -13,7 +13,7 @@ import controller.RegisterActivity;
  *
  * This is a test class for Register Activity.
  * It will perform different tests when register a user such as
- * a simple valid register, duplicate accounts, and invalid inputs.
+ * a simple valid register and invalid inputs.
  */
 public class RegisterActivityTest extends ActivityInstrumentationTestCase2<RegisterActivity> {
     private Solo solo;
@@ -47,7 +47,6 @@ public class RegisterActivityTest extends ActivityInstrumentationTestCase2<Regis
         solo.unlockScreen();
         boolean title = solo.searchText("Create Account");
         boolean confirmPass = solo.searchEditText("Confirm Password");
-        boolean submitButton = solo.searchButton("Create");
         assertTrue("Test Launch RegisterActivity failed", title && confirmPass);
     }
 
@@ -99,20 +98,6 @@ public class RegisterActivityTest extends ActivityInstrumentationTestCase2<Regis
         solo.clickOnButton("Create");
         boolean empty = solo.searchText("Please fill in all inputs");
         assertTrue("Test empty input failed", empty);
-    }
-
-    /**
-     * Test registering using an existing account's username.
-     */
-    public void testRegisterDuplicate() {
-        String user = "hieu123";
-        String pass = "123123";
-        solo.enterText(0, user);
-        solo.enterText(1, pass);
-        solo.enterText(2, pass);
-        solo.clickOnButton("Create");
-        boolean existed = solo.searchText("Username already exist");
-        assertTrue("Test create duplicate account failed", existed);
     }
 
     /**
