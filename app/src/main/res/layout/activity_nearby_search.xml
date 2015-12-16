@@ -53,4 +53,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="109dp" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nearbySearch_googlelogo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/powered_by_google_on_white"/>
+
 </RelativeLayout>

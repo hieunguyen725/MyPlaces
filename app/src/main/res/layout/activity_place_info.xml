@@ -9,6 +9,14 @@
     android:orientation="vertical"
     tools:context="controller.PlaceInfoActivity">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeinfo_googlelogo"
+        android:layout_gravity="right"
+        android:layout_marginBottom="14dp"
+        android:src="@drawable/powered_by_google_on_white"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
